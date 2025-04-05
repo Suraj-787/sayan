@@ -13,7 +13,10 @@ import { PageTransition } from "@/components/page-transition"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Government Schemes Portal",
+  title: "Sayan",
+  icons: {
+    icon: "icons8-workflow-24.png",
+  },
   description: "Find and access government schemes with AI-powered assistance",
     generator: 'v0.dev'
 }

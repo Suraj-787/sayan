@@ -28,8 +28,15 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center">
+              {/* Add Logo */}
+              <img
+                src="/icons8-workflow-24.png" // Replace with the actual path to your logo
+                alt="Logo"
+                className="h-8 w-8 mr-2" // Adjust height and width as needed
+              />
+          
             <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-              Sayan
+                Sayan
             </span>
           </Link>
         </div>
