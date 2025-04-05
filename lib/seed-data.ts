@@ -30,7 +30,7 @@ export const schemes = [
     application_process: "Apply online through the official PM-KISAN portal or visit your nearest Common Service Centre",
     documents: ["Aadhaar Card", "Land Records", "Bank Account Details"],
     deadline: "Ongoing scheme with quarterly payments",
-    website: "https://pmkisan.gov.in/",
+    website: "https://pmkisan.gov.in/RegistrationFormNew.aspx",
     created_at: new Date().toISOString(),
   },
   {
@@ -43,7 +43,7 @@ export const schemes = [
     application_process: "Apply through the official PMAY portal or visit your local municipal office",
     documents: ["Aadhaar Card", "Income Certificate", "Property Documents", "Bank Account Details"],
     deadline: "Ongoing",
-    website: "https://pmaymis.gov.in/",
+    website: "https://pmaymis.gov.in/PMAYMIS2_2024/Auth/Login.aspx",
     created_at: new Date().toISOString(),
   },
   {
@@ -56,7 +56,7 @@ export const schemes = [
     application_process: "Check eligibility on the official website or visit your nearest Ayushman Bharat Kendra",
     documents: ["Aadhaar Card", "Ration Card", "SECC Database Details"],
     deadline: "Ongoing",
-    website: "https://pmjay.gov.in/",
+    website: "https://beneficiary.nha.gov.in/",
     created_at: new Date().toISOString(),
   },
   {
@@ -69,7 +69,7 @@ export const schemes = [
     application_process: "Apply through your nearest LPG distributor or Common Service Centre",
     documents: ["Aadhaar Card", "BPL Certificate", "Bank Account Details"],
     deadline: "Ongoing",
-    website: "https://pmuy.gov.in/",
+    website: "https://pmuy.gov.in/ujjwala2.html",
     created_at: new Date().toISOString(),
   },
   {
@@ -82,7 +82,7 @@ export const schemes = [
     application_process: "Apply through any commercial bank, RRB, small finance bank, or NBFC",
     documents: ["Identity Proof", "Address Proof", "Business Plan", "Bank Account Details"],
     deadline: "Ongoing",
-    website: "https://www.mudra.org.in/",
+    website: "https://pmmydata.mudra.org.in/##",
     created_at: new Date().toISOString(),
   },
   {
@@ -108,7 +108,7 @@ export const schemes = [
     application_process: "No separate application needed. Available through existing ration card at Fair Price Shops",
     documents: ["Ration Card", "Aadhaar Card"],
     deadline: "Extended periodically based on government decisions",
-    website: "https://nfsa.gov.in/",
+    website: "https://nfsa.gov.in/sso/frmPublicLogin.aspx",
     created_at: new Date().toISOString(),
   },
   {
@@ -121,7 +121,7 @@ export const schemes = [
     application_process: "Register at your nearest PMKVY Training Center or apply online",
     documents: ["Aadhaar Card", "Educational Certificates", "Bank Account Details"],
     deadline: "Ongoing with regular batches throughout the year",
-    website: "https://www.pmkvyofficial.org/",
+    website: "https://www.india.gov.in/",
     created_at: new Date().toISOString(),
   },
   {
@@ -134,7 +134,7 @@ export const schemes = [
     application_process: "Apply through the Startup India portal after getting registered",
     documents: ["DPIIT Recognition Certificate", "Business Plan", "Company Registration Documents", "Bank Account Details"],
     deadline: "Rolling applications throughout the year",
-    website: "https://www.startupindia.gov.in/",
+    website: "https://www.startupindia.gov.in/bhaskar/register",
     created_at: new Date().toISOString(),
   },
   {
@@ -186,7 +186,7 @@ export const schemes = [
     application_process: "Open an account at any post office or authorized banks",
     documents: ["Girl Child's Birth Certificate", "Parent/Guardian ID Proof", "Address Proof"],
     deadline: "Can be opened until the girl child reaches 10 years of age",
-    website: "https://www.indiapost.gov.in/Financial/Pages/Content/Sukanya-Samriddhi-Account-Scheme.aspx",
+    website: "https://www.indiapost.gov.in/VAS/Pages/PMODashboard/SukanyaSamriddhiAccount.aspx",
     created_at: new Date().toISOString(),
   },
   {
