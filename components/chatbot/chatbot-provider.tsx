@@ -12,6 +12,16 @@ type Message = {
   originalContent?: string // Store original content for translation purposes
 }
 
+type ScrapedScheme = {
+  title: string
+  source: string
+  url: string
+  description?: string
+  eligibility?: string
+  benefits?: string
+  application_process?: string
+}
+
 type ChatbotContextType = {
   isOpen: boolean
   toggleChatbot: () => void
@@ -22,6 +32,8 @@ type ChatbotContextType = {
   sendMessage: (content: string) => Promise<void>
   isRecording: boolean
   toggleRecording: () => void
+  isSearching: boolean
+  searchSchemes: (query: string, options?: any) => Promise<void>
 }
 
 const ChatbotContext = createContext<ChatbotContextType | undefined>(undefined)
@@ -40,6 +52,7 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
   ])
   const [isLoading, setIsLoading] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
+  const [isSearching, setIsSearching] = useState(false)
 
   // Translate welcome message when language changes
   useEffect(() => {
@@ -80,6 +93,90 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
         // This is just a mock implementation
         sendMessage("How do I check my eligibility for government schemes?")
       }, 2000)
+    }
+  }
+
+  // Function to search for schemes online
+  const searchSchemes = async (query: string, options?: any) => {
+    try {
+      setIsSearching(true)
+      
+      // Add a loading message
+      const loadingMessageId = `loading-${Date.now()}`
+      setMessages(prevMessages => [
+        ...prevMessages,
+        {
+          id: loadingMessageId,
+          content: "Searching online for more information about government schemes...",
+          role: "assistant",
+          timestamp: new Date(),
+        }
+      ])
+      
+      // Make API call to web-search endpoint
+      const response = await fetch('/api/web-search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query, options }),
+      })
+      
+      if (!response.ok) {
+        throw new Error('Failed to search for schemes')
+      }
+      
+      const data = await response.json()
+      const { schemes } = data
+      
+      // Remove the loading message
+      setMessages(prevMessages => 
+        prevMessages.filter(msg => msg.id !== loadingMessageId)
+      )
+      
+      if (!schemes || schemes.length === 0) {
+        // No schemes found
+        const noResultsMessage: Message = {
+          id: `no-results-${Date.now()}`,
+          content: "I couldn't find any specific government schemes matching your criteria. Please try a different search or provide more details about what you're looking for.",
+          role: "assistant",
+          timestamp: new Date(),
+        }
+        
+        setMessages(prevMessages => [...prevMessages, noResultsMessage])
+      } else {
+        // Format the schemes found into a message
+        const schemesContent = schemes.map((scheme: ScrapedScheme) => {
+          return `• ${scheme.title}\n   Source: ${scheme.source}\n   ${scheme.description ? `Description: ${scheme.description}\n   ` : ''}${scheme.eligibility ? `Eligibility: ${scheme.eligibility}\n   ` : ''}${scheme.url ? `More info: ${scheme.url}` : ''}`
+        }).join('\n\n')
+        
+        const resultsMessage: Message = {
+          id: `results-${Date.now()}`,
+          content: `I found the following schemes that might be relevant:\n\n${schemesContent}\n\nWould you like more details about any of these schemes?`,
+          role: "assistant",
+          timestamp: new Date(),
+          originalContent: `I found the following schemes that might be relevant:\n\n${schemesContent}\n\nWould you like more details about any of these schemes?`,
+        }
+        
+        setMessages(prevMessages => [...prevMessages, resultsMessage])
+      }
+    } catch (error) {
+      console.error('Error searching for schemes:', error)
+      
+      // Add error message
+      const errorMessage: Message = {
+        id: `error-${Date.now()}`,
+        content: "Sorry, I encountered an error while searching for schemes. Please try again later.",
+        role: "assistant",
+        timestamp: new Date(),
+      }
+      
+      setMessages(prevMessages => [
+        ...prevMessages.filter(msg => !msg.id.startsWith('loading-')), // Remove any loading messages
+        errorMessage
+      ])
+    } finally {
+      setIsSearching(false)
     }
   }
 
@@ -166,6 +263,37 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
       // Generate AI response
       const aiResponse = await generateChatResponse(conversationHistory, content)
       
+      // Check if response suggests web search
+      if (aiResponse.includes("Would you like me to search for more information online about")) {
+        // Extract what to search for
+        const searchMatch = aiResponse.match(/search for more information online about \[(.*?)\]/)
+        
+        if (searchMatch && searchMatch[1]) {
+          const searchQuery = searchMatch[1]
+          
+          // Create bot message object for UI
+          const botMessageId = `bot-${Date.now()}`
+          const botMessage: Message = {
+            id: botMessageId,
+            content: aiResponse,
+            originalContent: aiResponse, // Store original for translation
+            role: "assistant",
+            timestamp: new Date(),
+          }
+          
+          // First add the bot message suggesting the search
+          setMessages(prevMessages => [...prevMessages, botMessage])
+          
+          // Wait a bit before starting the search to let the user read the message
+          setTimeout(() => {
+            searchSchemes(searchQuery)
+          }, 1000)
+          
+          setIsLoading(false)
+          return
+        }
+      }
+      
       // Create bot message object for UI
       const botMessageId = `bot-${Date.now()}`
       const botMessage: Message = {
@@ -207,6 +335,8 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
     sendMessage,
     isRecording,
     toggleRecording,
+    isSearching,
+    searchSchemes,
   }
 
   return (

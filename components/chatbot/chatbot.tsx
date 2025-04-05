@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { X, Send, Mic, MicOff, Maximize2, Minimize2, Globe } from "lucide-react"
+import { X, Send, Mic, MicOff, Maximize2, Minimize2, Globe, ArrowDown } from "lucide-react"
 import { useChatbot } from "@/components/chatbot/chatbot-provider"
 import { useLanguage } from "@/components/language-provider"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -16,6 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { MarkdownRenderer } from "@/components/ui/markdown-renderer"
 
 export function Chatbot() {
   const { 
@@ -25,7 +26,8 @@ export function Chatbot() {
     isLoading, 
     sendMessage, 
     isRecording, 
-    toggleRecording 
+    toggleRecording,
+    isSearching 
   } = useChatbot()
   
   const { language, setLanguage, translate } = useLanguage()
@@ -33,19 +35,45 @@ export function Chatbot() {
   const [isMaximized, setIsMaximized] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
+  // Add a ref to track if user is scrolled to bottom
+  const isAtBottomRef = useRef(true)
 
-  // Scroll to bottom when messages change
+  // Replace the existing scroll effect with a smarter one
   useEffect(() => {
-    if (!messagesEndRef.current) return;
+    if (!messagesEndRef.current || !scrollAreaRef.current) return;
     
-    // Use requestAnimationFrame for smoother performance
-    const scrollToBottom = () => {
+    // Check if user is near the bottom before messages change
+    const handleScroll = () => {
+      if (!scrollAreaRef.current) return;
+      
+      const scrollArea = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (!scrollArea) return;
+      
+      // User is at bottom if they're within 100px of the bottom
+      const atBottom = scrollArea.scrollHeight - scrollArea.scrollTop - scrollArea.clientHeight < 100;
+      isAtBottomRef.current = atBottom;
+    };
+    
+    // Add scroll event listener
+    const scrollArea = scrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+    if (scrollArea) {
+      scrollArea.addEventListener('scroll', handleScroll);
+    }
+    
+    // Only scroll to bottom if:
+    // 1. User was already at the bottom (or we don't yet have scroll position)
+    // 2. A new message was added
+    if (isAtBottomRef.current) {
       requestAnimationFrame(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
       });
-    };
+    }
     
-    scrollToBottom();
+    return () => {
+      if (scrollArea) {
+        scrollArea.removeEventListener('scroll', handleScroll);
+      }
+    };
   }, [messages]);
   
   // Memoize language items to prevent re-renders
@@ -115,7 +143,7 @@ export function Chatbot() {
                 : "bg-accent text-accent-foreground"
             } shadow-sm`}
           >
-            <p className="text-sm whitespace-pre-line break-words">{message.content}</p>
+            <MarkdownRenderer content={message.content} className="text-sm" />
           </div>
         </div>
       </div>
@@ -200,7 +228,7 @@ export function Chatbot() {
           <ScrollArea className={`${isMaximized ? "h-[calc(80vh-8rem)]" : "h-[350px]"} pr-4 overflow-y-auto`}>
             <div className="flex flex-col space-y-2">
               {displayMessages.map((message) => renderMessage(message))}
-              {isLoading && (
+              {(isLoading || isSearching) && (
                 <div className="flex justify-start mb-2">
                   <div className="flex items-start space-x-2">
                     <Avatar className="h-8 w-8 shrink-0">
@@ -227,6 +255,21 @@ export function Chatbot() {
                 </div>
               )}
               <div ref={messagesEndRef} />
+              {!isAtBottomRef.current && (
+                <div className="sticky bottom-2 right-2 flex justify-end">
+                  <Button
+                    onClick={() => {
+                      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+                      isAtBottomRef.current = true;
+                    }}
+                    size="sm"
+                    className="rounded-full h-8 w-8 bg-primary hover:bg-primary/90 shadow-md"
+                    aria-label="Scroll to bottom"
+                  >
+                    <ArrowDown className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
             </div>
           </ScrollArea>
         </CardContent>
