@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { seedDatabase } from '@/lib/supabase-utils'
+import { seedDatabase } from '@/lib/mongoose-utils'
 
 // This route should be protected in a real application
 export async function POST(request: NextRequest) {

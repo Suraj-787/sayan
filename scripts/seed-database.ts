@@ -1,12 +1,12 @@
 /**
- * This script seeds the Supabase database with initial data for schemes and FAQs.
+ * This script seeds the MongoDB database with initial data for schemes and FAQs.
  * 
  * To run this script:
- * 1. Make sure you have set up your Supabase environment variables
+ * 1. Make sure you have set up your MongoDB environment variables
  * 2. Run: npx tsx scripts/seed-database.ts
  */
 
-import { seedDatabase } from '../lib/supabase-utils'
+import { seedDatabase } from '../lib/mongoose-utils'
 
 async function main() {
   console.log('Starting database seeding process...')

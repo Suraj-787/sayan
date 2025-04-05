@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { useLanguage } from "@/components/language-provider"
 import { Globe } from "lucide-react"
-import { getFAQsForScheme } from "@/lib/supabase-utils"
+import { getFAQsForScheme } from "@/lib/mongoose-utils"
 
 type SchemeFAQProps = {
   schemeId: string
@@ -13,7 +13,7 @@ type SchemeFAQProps = {
 }
 
 type FAQ = {
-  id: string
+  _id: string
   question: string
   answer: string
 }
@@ -30,7 +30,7 @@ export function SchemeFAQ({ schemeId, className = "" }: SchemeFAQProps) {
       setIsLoading(true)
       
       try {
-        // Fetch FAQs from Supabase
+        // Fetch FAQs from MongoDB
         const faqData = await getFAQsForScheme(schemeId)
         
         if (!faqData || faqData.length === 0) {
@@ -41,7 +41,7 @@ export function SchemeFAQ({ schemeId, className = "" }: SchemeFAQProps) {
         
         // Map to the format we need
         const formattedFAQs = faqData.map(faq => ({
-          id: faq.id,
+          _id: faq._id.toString(),
           question: faq.question,
           answer: faq.answer
         }))
@@ -78,7 +78,7 @@ export function SchemeFAQ({ schemeId, className = "" }: SchemeFAQProps) {
       // Translate FAQs if needed
       const translatedFAQs = await Promise.all(
         faqs.map(async (faq) => ({
-          id: faq.id,
+          _id: faq._id,
           question: await translate(faq.question),
           answer: await translate(faq.answer),
         })),
@@ -128,7 +128,7 @@ export function SchemeFAQ({ schemeId, className = "" }: SchemeFAQProps) {
       <CardContent className="pt-4">
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq, index) => (
-            <AccordionItem key={faq.id} value={`item-${index}`} className="border-primary/10">
+            <AccordionItem key={faq._id} value={`item-${index}`} className="border-primary/10">
               <AccordionTrigger className="text-foreground hover:text-primary transition-colors">
                 {faq.question}
               </AccordionTrigger>

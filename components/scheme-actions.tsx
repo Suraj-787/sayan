@@ -1,36 +1,71 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Share2, Bookmark, BookmarkCheck, Volume2, VolumeX } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
+import { createBookmark, deleteBookmark, isSchemeBookmarked } from "@/lib/mongoose-utils"
 
+// Updated type for serialized MongoDB scheme
 type SchemeActionsProps = {
   scheme: {
-    id: string
-    title: string
-    description: string
+    _id: string;
+    title: string;
+    description: string;
+    website: string;
+    created_at: string;
   }
 }
 
 export function SchemeActions({ scheme }: SchemeActionsProps) {
   const [bookmarked, setBookmarked] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  
+  // Mock user ID for development purposes
+  // In a real app, this would come from authentication
+  const userId = "user123"
+  
+  useEffect(() => {
+    const checkBookmarkStatus = async () => {
+      try {
+        const status = await isSchemeBookmarked(userId, scheme._id)
+        setBookmarked(status)
+      } catch (error) {
+        console.error("Error checking bookmark status:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    checkBookmarkStatus()
+  }, [scheme._id, userId])
 
-  const handleBookmark = () => {
-    setBookmarked(!bookmarked)
-
-    if (!bookmarked) {
+  const handleBookmark = async () => {
+    try {
+      if (bookmarked) {
+        await deleteBookmark(userId, scheme._id)
+        setBookmarked(false)
+        toast({
+          title: "Bookmark Removed",
+          description: `${scheme.title} has been removed from your bookmarks.`,
+        })
+      } else {
+        await createBookmark(userId, scheme._id)
+        setBookmarked(true)
+        toast({
+          title: "Scheme Bookmarked",
+          description: `${scheme.title} has been added to your bookmarks.`,
+        })
+      }
+    } catch (error) {
+      console.error("Error toggling bookmark:", error)
       toast({
-        title: "Scheme Bookmarked",
-        description: `${scheme.title} has been added to your bookmarks.`,
-      })
-    } else {
-      toast({
-        title: "Bookmark Removed",
-        description: `${scheme.title} has been removed from your bookmarks.`,
+        title: "Error",
+        description: "Failed to update bookmark. Please try again.",
+        variant: "destructive"
       })
     }
   }
@@ -60,7 +95,7 @@ export function SchemeActions({ scheme }: SchemeActionsProps) {
     setIsPlaying(!isPlaying)
 
     if (!isPlaying) {
-      // In a real app, this would use Sarvam TTS to read the scheme details
+      // In a real app, this would use text-to-speech to read the scheme details
       toast({
         title: "Voice Assistant",
         description: "Reading scheme details...",
@@ -84,6 +119,7 @@ export function SchemeActions({ scheme }: SchemeActionsProps) {
             variant="outline"
             className="flex items-center justify-center gap-2 border-primary/20 text-primary hover:bg-primary/10 hover:text-primary transition-all duration-300"
             onClick={handleBookmark}
+            disabled={isLoading}
           >
             {bookmarked ? (
               <>
@@ -153,7 +189,7 @@ export function SchemeActions({ scheme }: SchemeActionsProps) {
               <li>Submit and track your application</li>
             </ol>
             <Button className="w-full mt-4 bg-primary hover:bg-primary/90 btn-hover-effect" asChild>
-              <a href={`https://example.gov.in/apply/${scheme.id}`} target="_blank" rel="noopener noreferrer">
+              <a href={scheme.website} target="_blank" rel="noopener noreferrer">
                 Apply Now
               </a>
             </Button>
@@ -172,7 +208,7 @@ export function SchemeActions({ scheme }: SchemeActionsProps) {
               asChild
             >
               <a
-                href={`https://example.gov.in/check-eligibility/${scheme.id}`}
+                href={scheme.website}
                 target="_blank"
                 rel="noopener noreferrer"
               >

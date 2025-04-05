@@ -1,6 +1,6 @@
 # Government Schemes App
 
-A Next.js application for discovering and interacting with government schemes, powered by Supabase and Google Gemini AI.
+A Next.js application for discovering and interacting with government schemes, powered by MongoDB and Google Gemini AI.
 
 ## Features
 
@@ -14,13 +14,13 @@ A Next.js application for discovering and interacting with government schemes, p
 ## Tech Stack
 
 - **Frontend:** Next.js, React, TypeScript, Tailwind CSS, shadcn/ui
-- **Backend:** Supabase (PostgreSQL, Auth, Storage)
+- **Backend:** MongoDB (Database)
 - **AI:** Google Gemini 2.0 Flash
 - **Language:** TypeScript
 
 ## Database Model
 
-The application uses Supabase with the following database tables:
+The application uses MongoDB with the following collections:
 
 - **schemes:** Government schemes information
 - **faqs:** Frequently asked questions for each scheme
@@ -33,7 +33,7 @@ The application uses Supabase with the following database tables:
 ### Prerequisites
 
 - Node.js 18+ and pnpm
-- Supabase account
+- MongoDB (local or remote)
 - Google Gemini API key
 
 ### Installation
@@ -57,15 +57,15 @@ pnpm install
 cp .env.example .env.local
 ```
 
-Edit `.env.local` and add your Supabase and Gemini API credentials.
+Edit `.env.local` and add your MongoDB and Gemini API credentials.
 
-4. Seed the database
+4. Initialize and seed the database
 
 ```bash
-pnpm seed
+pnpm run db:init
 ```
 
-This will populate your Supabase database with sample schemes and FAQs.
+This will set up your MongoDB database with sample schemes and FAQs.
 
 5. Run the development server
 
@@ -75,48 +75,29 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-## Supabase Setup
+## MongoDB Setup
 
-1. Create a new Supabase project
-2. Set up the following tables:
+This application uses MongoDB as the database. Follow these steps to set up MongoDB:
 
-### schemes
-- id (uuid, primary key)
-- title (text)
-- description (text)
-- category (text)
-- eligibility (text)
-- benefits (text)
-- application_process (text)
-- documents (text[])
-- deadline (text)
-- website (text)
-- created_at (timestamp with time zone)
+1. Make sure you have MongoDB installed locally or have access to a MongoDB instance
+2. Set the MongoDB connection string in `.env.local`:
+   ```
+   MONGODB_URI="mongodb://localhost:27017/sayan"
+   ```
+3. Initialize the database with required collections and indexes:
+   ```
+   pnpm run db:init
+   ```
 
-### faqs
-- id (uuid, primary key)
-- scheme_id (uuid, foreign key to schemes.id)
-- question (text)
-- answer (text)
-- created_at (timestamp with time zone)
+## Database Structure
 
-### chats
-- id (uuid, primary key)
-- user_id (uuid, nullable)
-- created_at (timestamp with time zone)
+The application uses the following MongoDB collections:
 
-### messages
-- id (uuid, primary key)
-- chat_id (uuid, foreign key to chats.id)
-- role (text, enum: 'user', 'assistant')
-- content (text)
-- created_at (timestamp with time zone)
-
-### bookmarks
-- id (uuid, primary key)
-- user_id (uuid)
-- scheme_id (uuid, foreign key to schemes.id)
-- created_at (timestamp with time zone)
+- **schemes** - Government schemes/programs information
+- **faqs** - Frequently asked questions for each scheme
+- **chats** - User chat sessions
+- **messages** - Individual messages within chat sessions
+- **bookmarks** - User bookmarks for schemes
 
 ## Gemini AI Integration
 
@@ -126,6 +107,13 @@ To set up Gemini:
 
 1. Get an API key from [Google AI Studio](https://makersuite.google.com/)
 2. Add your API key to the `.env.local` file
+
+## API Routes
+
+The application provides the following API routes:
+
+- **/api/chat** - POST endpoint for generating AI responses about schemes
+- **/api/seed** - POST endpoint for seeding the database (development only)
 
 ## License
 

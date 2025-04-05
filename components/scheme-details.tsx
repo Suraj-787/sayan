@@ -7,18 +7,20 @@ import { Separator } from "@/components/ui/separator"
 import { useLanguage } from "@/components/language-provider"
 import { FileText, Users, Gift, FileCheck, FileSpreadsheet, Calendar } from "lucide-react"
 
+// Updated type definition for serialized MongoDB scheme
 type SchemeDetailsProps = {
   scheme: {
-    id: string
-    title: string
-    description: string
-    category: string
-    eligibility: string
-    benefits: string
-    applicationProcess: string
-    documents: string[]
-    deadline: string
-    website: string
+    _id: string;
+    title: string;
+    description: string;
+    category: string;
+    eligibility: string;
+    benefits: string;
+    application_process: string;
+    documents: string[];
+    deadline: string;
+    website: string;
+    created_at: string;
   }
 }
 
@@ -40,7 +42,7 @@ export function SchemeDetails({ scheme }: SchemeDetailsProps) {
         category: await translate(scheme.category),
         eligibility: await translate(scheme.eligibility),
         benefits: await translate(scheme.benefits),
-        applicationProcess: await translate(scheme.applicationProcess),
+        application_process: await translate(scheme.application_process),
         documents: await Promise.all(scheme.documents.map((doc) => translate(doc))),
         deadline: await translate(scheme.deadline),
       }
@@ -95,7 +97,7 @@ export function SchemeDetails({ scheme }: SchemeDetailsProps) {
             <FileCheck className="mr-2 h-5 w-5 text-primary" />
             Application Process
           </h3>
-          <p className="text-foreground/80">{translatedScheme.applicationProcess}</p>
+          <p className="text-foreground/80">{translatedScheme.application_process}</p>
         </div>
 
         <Separator className="bg-primary/10" />

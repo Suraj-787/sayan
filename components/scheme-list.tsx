@@ -9,56 +9,25 @@ import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useLanguage } from "@/components/language-provider"
 
-// Mock data for schemes
-const mockSchemes = [
-  {
-    id: "1",
-    title: "PM Kisan Samman Nidhi Yojana",
-    description: "Financial assistance to farmer families across the country",
-    category: "Agriculture",
-    eligibility: "farmers",
-  },
-  {
-    id: "2",
-    title: "Pradhan Mantri Awas Yojana",
-    description: "Housing for all by 2022 through financial assistance for house construction",
-    category: "Housing",
-    eligibility: "all",
-  },
-  {
-    id: "3",
-    title: "Pradhan Mantri Jan Dhan Yojana",
-    description: "Financial inclusion program to ensure access to financial services",
-    category: "Finance",
-    eligibility: "all",
-  },
-  {
-    id: "4",
-    title: "National Scholarship Portal",
-    description: "Single-window system for scholarship schemes across ministries",
-    category: "Education",
-    eligibility: "students",
-  },
-  {
-    id: "5",
-    title: "Ayushman Bharat Yojana",
-    description: "Health insurance scheme providing coverage up to ₹5 lakhs per family per year",
-    category: "Health",
-    eligibility: "all",
-  },
-  {
-    id: "6",
-    title: "Sukanya Samriddhi Yojana",
-    description: "Small savings scheme for girl child education and marriage needs",
-    category: "Finance",
-    eligibility: "women",
-  },
-]
+// Define a type for serialized schemes from the API
+interface SerializedScheme {
+  _id: string;
+  title: string;
+  description: string;
+  category: string;
+  eligibility: string;
+  benefits: string;
+  application_process: string;
+  documents: string[];
+  deadline: string;
+  website: string;
+  created_at: string;
+}
 
 export function SchemeList() {
   const searchParams = useSearchParams()
   const { language, translate } = useLanguage()
-  const [schemes, setSchemes] = useState<any[]>([])
+  const [schemes, setSchemes] = useState<SerializedScheme[]>([])
   const [loading, setLoading] = useState(true)
 
   // Fix: Use a ref to track if this is the first render
@@ -87,51 +56,66 @@ export function SchemeList() {
     prevSearchParamsRef.current = searchParams.toString()
     prevLanguageRef.current = language
 
-    // Get filter parameters
-    const categoryParam = searchParams.get("category")
-    const eligibilityParam = searchParams.get("eligibility")
-    const searchParam = searchParams.get("search")
-
-    // Filter schemes based on URL parameters
-    let filteredSchemes = [...mockSchemes]
-
-    if (categoryParam) {
-      const categories = categoryParam.split(",")
-      filteredSchemes = filteredSchemes.filter((scheme) => categories.includes(scheme.category.toLowerCase()))
+    try {
+      // Fetch schemes from the server
+      const response = await fetch('/api/schemes');
+      if (!response.ok) {
+        throw new Error('Failed to fetch schemes');
+      }
+      
+      let fetchedSchemes: SerializedScheme[] = await response.json();
+      
+      // Get filter parameters
+      const categoryParam = searchParams.get("category")
+      const eligibilityParam = searchParams.get("eligibility")
+      const searchParam = searchParams.get("search")
+  
+      // Filter schemes based on URL parameters
+      if (categoryParam) {
+        const categories = categoryParam.split(",")
+        fetchedSchemes = fetchedSchemes.filter((scheme) => 
+          categories.includes(scheme.category.toLowerCase())
+        )
+      }
+  
+      if (eligibilityParam && eligibilityParam !== "all") {
+        // This assumes eligibility field contains keywords like "farmers", "students", etc.
+        const eligibilityLower = eligibilityParam.toLowerCase()
+        fetchedSchemes = fetchedSchemes.filter(
+          (scheme) => scheme.eligibility.toLowerCase().includes(eligibilityLower)
+        )
+      }
+  
+      if (searchParam) {
+        const searchLower = searchParam.toLowerCase()
+        fetchedSchemes = fetchedSchemes.filter(
+          (scheme) =>
+            scheme.title.toLowerCase().includes(searchLower) ||
+            scheme.description.toLowerCase().includes(searchLower) ||
+            scheme.category.toLowerCase().includes(searchLower),
+        )
+      }
+  
+      // Translate if needed
+      if (language !== "en") {
+        const translatedSchemes = await Promise.all(
+          fetchedSchemes.map(async (scheme) => ({
+            ...scheme,
+            title: await translate(scheme.title),
+            description: await translate(scheme.description),
+            category: await translate(scheme.category),
+          })),
+        )
+        setSchemes(translatedSchemes)
+      } else {
+        setSchemes(fetchedSchemes)
+      }
+    } catch (error) {
+      console.error('Error fetching schemes:', error);
+      setSchemes([]);
+    } finally {
+      setLoading(false);
     }
-
-    if (eligibilityParam && eligibilityParam !== "all") {
-      filteredSchemes = filteredSchemes.filter(
-        (scheme) => scheme.eligibility === eligibilityParam || scheme.eligibility === "all",
-      )
-    }
-
-    if (searchParam) {
-      const searchLower = searchParam.toLowerCase()
-      filteredSchemes = filteredSchemes.filter(
-        (scheme) =>
-          scheme.title.toLowerCase().includes(searchLower) ||
-          scheme.description.toLowerCase().includes(searchLower) ||
-          scheme.category.toLowerCase().includes(searchLower),
-      )
-    }
-
-    // Translate if needed
-    if (language !== "en") {
-      const translatedSchemes = await Promise.all(
-        filteredSchemes.map(async (scheme) => ({
-          ...scheme,
-          title: await translate(scheme.title),
-          description: await translate(scheme.description),
-          category: await translate(scheme.category),
-        })),
-      )
-      setSchemes(translatedSchemes)
-    } else {
-      setSchemes(filteredSchemes)
-    }
-
-    setLoading(false)
   }
 
   if (loading) {
@@ -170,7 +154,7 @@ export function SchemeList() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {schemes.map((scheme) => (
         <Card
-          key={scheme.id}
+          key={scheme._id}
           className="flex flex-col h-full card-hover border border-transparent hover:border-primary/20"
         >
           <CardHeader>
@@ -184,7 +168,7 @@ export function SchemeList() {
           </CardHeader>
           <CardFooter className="mt-auto pt-4">
             <Button asChild variant="outline" className="w-full btn-hover-effect group">
-              <Link href={`/schemes/${scheme.id}`} className="flex items-center justify-center">
+              <Link href={`/schemes/${scheme._id}`} className="flex items-center justify-center">
                 Learn More
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>

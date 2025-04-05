@@ -4,7 +4,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 export async function generateChatResponse(
   chatHistory: { role: string; content: string }[],
   prompt: string,
-  language: string = "en",
   context?: string
 ) {
   try {
@@ -18,109 +17,65 @@ export async function generateChatResponse(
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // Extract system prompts
-    let systemPrompts = chatHistory.filter(msg => msg.role === "system").map(msg => msg.content);
-    
-    // Combine all system prompts into a single context
-    let systemContext = systemPrompts.join("\n\n");
-    
-    // Add language instruction to system context
-    let languageInstruction = "";
-    
-    if (language !== "en") {
-      // Map language codes to full names
-      const languageNames: Record<string, string> = {
-        "hi": "Hindi",
-        "ta": "Tamil", 
-        "bn": "Bengali"
-      };
-      
-      const languageName = languageNames[language] || language;
-      
-      languageInstruction = `\n\nIMPORTANT: Please respond in ${languageName} language directly. Do not respond in English.`;
-      
-      // Add specific instructions for each language
-      if (language === "hi") {
-        languageInstruction += " Please use proper Hindi grammar and vocabulary. Write in Devanagari script.";
-      } else if (language === "ta") {
-        languageInstruction += " Please use proper Tamil grammar and vocabulary. Write in Tamil script.";
-      } else if (language === "bn") {
-        languageInstruction += " Please use proper Bengali grammar and vocabulary. Write in Bengali script.";
-      }
-    }
-    
-    // Add language instruction to system context
-    if (languageInstruction) {
-      systemContext = systemContext + languageInstruction;
-    }
-    
-    // If we have additional context, add it to the system context
-    if (context) {
-      systemContext = systemContext ? `${systemContext}\n\n${context}` : context;
-    }
+    // Create system prompt
+    const systemPrompt = `You are a knowledgeable government schemes assistant for Indian citizens. Your purpose is to:
+         
+1. Provide accurate, detailed information about government schemes in India
+2. Help users understand eligibility criteria for various schemes
+3. Guide users through application processes
+4. Explain benefits and documentation requirements
+5. Answer questions about deadlines, websites, and other practical details
 
-    // Filter out system messages for the chat
-    const userModelMessages = chatHistory.filter(msg => msg.role !== "system");
+Format your responses in a clean, readable structure:
+• Use bullet points with the "•" symbol (not Markdown asterisks)
+• Separate points with line breaks
+• For lists and steps, use numbers followed by a period (1., 2., etc.)
+• Use line breaks between paragraphs for better readability
+• If highlighting important information, use clear headers like "ELIGIBILITY:" instead of markdown formatting
+• Don't use markdown formatting like **, #, or backticks
 
-    // For the simplest approach, use just the system context + current prompt if no history
-    if (userModelMessages.length === 0) {
-      const fullPrompt = systemContext 
-        ? `${systemContext}\n\nUser query: ${prompt}`
-        : prompt;
-      
-      const result = await model.generateContent(fullPrompt);
-      return result.response.text();
-    }
+Focus on being helpful, clear, and specific. When you don't know an answer, acknowledge it and suggest where they might find more information.
+
+For scheme-specific questions, include:
+• Eligibility requirements
+• Benefits provided
+• Application process
+• Required documents
+• Important deadlines
+• Official websites or contacts
+
+Avoid political discussions and focus on providing factual, helpful information.`;
+
+    // Add context to the system prompt if provided
+    const enhancedSystemPrompt = context 
+      ? `${systemPrompt}\n\nHere is additional context about available schemes:\n${context}`
+      : systemPrompt;
 
     // Create a simplified chat history
-    // IMPORTANT: Make sure it starts with a user message and alternates correctly
     const simplifiedHistory = [];
-    let lastRole = null;
     
-    // Build a proper alternating history (excluding system messages)
-    for (const msg of userModelMessages) {
+    // Add the system message as the first message
+    simplifiedHistory.push({
+      role: "model",
+      parts: [{ text: enhancedSystemPrompt }]
+    });
+    
+    // Add user messages and assistant responses
+    for (const msg of chatHistory) {
       const apiRole = msg.role === "user" ? "user" : "model";
-      
-      // Skip duplicates of the same role
-      if (apiRole === lastRole) continue;
       
       // Add to history
       simplifiedHistory.push({
         role: apiRole,
         parts: [{ text: msg.content }]
       });
-      
-      lastRole = apiRole;
     }
     
-    // If the history doesn't start with a user message, remove everything until we find one
-    while (simplifiedHistory.length > 0 && simplifiedHistory[0].role !== "user") {
-      simplifiedHistory.shift();
-    }
-    
-    // If we still don't have a proper history, just use the current prompt
-    if (simplifiedHistory.length === 0) {
-      const fullPrompt = systemContext 
-        ? `${systemContext}\n\nUser query: ${prompt}`
-        : prompt;
-      
-      const result = await model.generateContent(fullPrompt);
-      return result.response.text();
-    }
-    
-    // If we have system context, inject it into the first user message
-    if (systemContext && simplifiedHistory.length > 0 && simplifiedHistory[0].role === "user") {
-      const firstUserMsg = simplifiedHistory[0].parts[0].text;
-      simplifiedHistory[0].parts[0].text = `${systemContext}\n\nPlease respond to this user request: ${firstUserMsg}`;
-    }
-    
-    // Add the current prompt if the last message wasn't from the user
-    if (simplifiedHistory[simplifiedHistory.length - 1].role !== "user") {
-      simplifiedHistory.push({
-        role: "user",
-        parts: [{ text: prompt }]
-      });
-    }
+    // Add the current prompt
+    simplifiedHistory.push({
+      role: "user",
+      parts: [{ text: prompt }]
+    });
     
     // Generate the response
     const result = await model.generateContent({

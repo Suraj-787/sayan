@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateChatResponse } from '@/lib/gemini'
-import { getAllSchemes } from '@/lib/supabase-utils'
+import { getAllSchemes } from '@/lib/mongoose-utils'
 
 export async function POST(request: NextRequest) {
   try {

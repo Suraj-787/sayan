@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode, useCallback } from "react"
-import { createChat, addMessageToChat, getMessagesForChat } from "@/lib/supabase-utils"
+import { createChat, addMessageToChat, getMessagesForChat } from "@/lib/mongoose-utils"
 import { generateChatResponse } from "@/lib/gemini"
 import { useLanguage } from "@/components/language-provider"
 
@@ -147,12 +147,12 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
         try {
           // 1. Attempt to create or retrieve a chat session ID
           const chat = await createChat(); // Assuming createChat handles finding existing/creating new
-          if (!chat || !chat.id) {
+          if (!chat || !chat._id) {
              console.error("Failed to create or retrieve chat session.");
              setIsLoading(false);
              return;
           }
-          const currentChatId = chat.id;
+          const currentChatId = chat._id.toString();
           setChatId(currentChatId);
 
           // 2. Load existing messages for this chat
@@ -185,7 +185,7 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
                   originalContent: "👋 Hello! I'm your AI assistant specialized in Indian government schemes. I can help you:\n\n• Find schemes you're eligible for\n• Explain application processes\n• Provide information on benefits and deadlines\n• Guide you through documentation requirements\n\nHow may I assist you today?"
                 }, 
                 ...existingMessages.map(msg => ({
-                  id: msg.id,
+                  id: msg._id?.toString() || `msg-${Date.now()}-${Math.random()}`,
                   content: msg.content,
                   originalContent: msg.content,
                   role: msg.role as ('user' | 'assistant'), // Assert type from DB
@@ -248,117 +248,74 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
       });
       
       // Add user message to database
-      await addMessageToChat(chatId, "user", content);
+      const savedUserMessage = await addMessageToChat(chatId, "user", content)
+      if (!savedUserMessage) {
+        console.error("Failed to save user message to database");
+      }
 
-      // Get latest messages directly from state getter for API call
-      // This ensures we have the current message history including the user message just added
-      const currentMessages = [...messages, userMessage];
-      
-      // Build message history for the API, excluding welcome message
-      const messageHistoryForApi = currentMessages
-        .filter(msg => msg.id !== "welcome")
+      // Prepare messages for AI context - use only content, not IDs or timestamps
+      const conversationHistory = messages
+        .filter(msg => msg.id !== "welcome") // Exclude welcome message
         .map(msg => ({
           role: msg.role,
-          content: msg.originalContent || msg.content // Use original content if available
-        }));
-
-      // Enhance the context for better responses
-      const systemContext = {
-        role: "system",
-        content: `You are a knowledgeable government schemes assistant for Indian citizens. Your purpose is to:
-        
-1. Provide accurate, detailed information about government schemes in India
-2. Help users understand eligibility criteria for various schemes
-3. Guide users through application processes
-4. Explain benefits and documentation requirements
-5. Answer questions about deadlines, websites, and other practical details
-
-Format your responses in a clean, readable structure:
-• Use bullet points with the "•" symbol (not Markdown asterisks)
-• Separate points with line breaks
-• For lists and steps, use numbers followed by a period (1., 2., etc.)
-• Use line breaks between paragraphs for better readability
-• If highlighting important information, use clear headers like "ELIGIBILITY:" instead of markdown formatting
-• Don't use markdown formatting like **, #, or backticks
-
-Focus on being helpful, clear, and specific. When you don't know an answer, acknowledge it and suggest where they might find more information.
-
-For scheme-specific questions, include:
-• Eligibility requirements
-• Benefits provided
-• Application process
-• Required documents
-• Important deadlines
-• Official websites or contacts
-
-Avoid political discussions and focus on providing factual, helpful information.`
-      };
-
-      // Final conversation history with system prompt
-      const enhancedHistory = [systemContext, ...messageHistoryForApi];
-
-      // Call API with the prepared history
-      console.log("Sending message to API, history length:", messageHistoryForApi.length);
-      console.log("Current language:", language);
+          content: msg.originalContent || msg.content,
+        }))
+        .concat({ role: "user", content }); // Add current message
       
-      try {
-        // Pass the selected language to the API
-        const responseText = await generateChatResponse(enhancedHistory, content, language);
-        console.log("Received response:", responseText.substring(0, 50) + "...");
-
-        // Create assistant message with unique ID
-        const assistantMessageId = `assistant-${Date.now()}`
-        const assistantMessage: Message = {
-          id: assistantMessageId,
-          content: responseText,
-          originalContent: responseText,
-          role: "assistant",
-          timestamp: new Date(),
-        }
-        
-        console.log("Adding assistant message with ID:", assistantMessageId);
-        
-        // Update UI with assistant response - important to use a function to get latest state
-        setMessages(prevMessages => {
-          // First verify the user message is there
-          const userMessageExists = prevMessages.some(msg => msg.id === userMessageId);
-          
-          // If user message is missing (somehow), make sure to include it
-          const updatedMessages = userMessageExists 
-            ? [...prevMessages, assistantMessage]
-            : [...prevMessages, userMessage, assistantMessage];
-            
-          console.log("New total message count:", updatedMessages.length);
-          return updatedMessages;
-        });
-
-        // Add assistant response to database
-        await addMessageToChat(chatId, "assistant", responseText);
-      } catch (error) {
-        console.error("Error getting response from API:", error);
-        // Still keep the user message visible even if the API call fails
+      // Generate AI response
+      const aiResponse = await generateChatResponse(conversationHistory, content)
+      
+      // Create bot message object for UI
+      const botMessageId = `bot-${Date.now()}`
+      const botMessage: Message = {
+        id: botMessageId,
+        content: aiResponse,
+        originalContent: aiResponse, // Store original for translation
+        role: "assistant",
+        timestamp: new Date(),
+      }
+      
+      // Add bot message to UI
+      setMessages(prevMessages => [...prevMessages, botMessage])
+      
+      // Add bot message to database
+      const savedBotMessage = await addMessageToChat(chatId, "assistant", aiResponse)
+      if (!savedBotMessage) {
+        console.error("Failed to save bot message to database");
       }
     } catch (error) {
-      console.error("Error in send message flow:", error);
-      // Optionally show error to user
+      console.error("Error sending message:", error)
+      
+      // Show error message
+      setMessages(prevMessages => [
+        ...prevMessages,
+        {
+          id: `error-${Date.now()}`,
+          content: "Sorry, there was an error processing your request. Please try again.",
+          role: "assistant",
+          timestamp: new Date(),
+        },
+      ])
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, [chatId, language, messages, translate]);
+  }, [chatId, messages])
+
+  const contextValue: ChatbotContextType = {
+    isOpen,
+    toggleChatbot,
+    openChatbot,
+    closeChatbot,
+    messages,
+    isLoading,
+    sendMessage,
+    chatId,
+    isRecording,
+    toggleRecording,
+  }
 
   return (
-    <ChatbotContext.Provider value={{ 
-      isOpen, 
-      toggleChatbot, 
-      openChatbot, 
-      closeChatbot,
-      messages,
-      isLoading,
-      sendMessage,
-      chatId,
-      isRecording,
-      toggleRecording
-    }}>
+    <ChatbotContext.Provider value={contextValue}>
       {children}
     </ChatbotContext.Provider>
   )
@@ -366,9 +323,11 @@ Avoid political discussions and focus on providing factual, helpful information.
 
 export function useChatbot() {
   const context = useContext(ChatbotContext)
+  
   if (context === undefined) {
     throw new Error("useChatbot must be used within a ChatbotProvider")
   }
+  
   return context
 }
 
