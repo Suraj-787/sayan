@@ -143,26 +143,7 @@ export function SchemeActions({ scheme }: SchemeActionsProps) {
           </Button>
         </div>
 
-        <div>
-          <Button
-            variant="outline"
-            className="w-full flex items-center justify-center gap-2 border-primary/20 text-primary hover:bg-primary/10 hover:text-primary transition-all duration-300"
-            onClick={toggleVoiceAssistant}
-          >
-            {isPlaying ? (
-              <>
-                <VolumeX className="h-4 w-4" />
-                Stop Voice Assistant
-              </>
-            ) : (
-              <>
-                <Volume2 className="h-4 w-4" />
-                Listen with Voice Assistant
-              </>
-            )}
-          </Button>
-          <p className="text-xs text-foreground/60 mt-2 text-center">Uses AI to read scheme details aloud</p>
-        </div>
+        
 
         <Tabs defaultValue="apply" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-primary/10">
