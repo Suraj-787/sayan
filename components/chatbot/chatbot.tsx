@@ -34,11 +34,6 @@ export function Chatbot() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
 
-  // Debug log when messages change
-  useEffect(() => {
-    console.log("Messages updated in Chatbot component:", messages.map(m => ({id: m.id, role: m.role})));
-  }, [messages]);
-
   // Scroll to bottom when messages change
   useEffect(() => {
     if (!messagesEndRef.current) return;
@@ -66,7 +61,6 @@ export function Chatbot() {
     
     if (!input.trim()) return;
     
-    console.log("Submitting message:", input);
     const userInput = input;
     
     // Clear input field immediately for better UX
@@ -91,10 +85,8 @@ export function Chatbot() {
     ? messages.slice(messages.length - 50) 
     : messages;
 
-  // Log rendering of each message for debugging
   const renderMessage = (message: any) => {
     const isUser = message.role === "user";
-    console.log(`Rendering message: ${message.id}, role: ${message.role}, content: ${message.content.substring(0, 20)}...`);
     
     return (
       <div key={message.id} className={`flex w-full ${isUser ? "justify-end" : "justify-start"} mb-2`}>

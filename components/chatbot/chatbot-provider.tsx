@@ -1,7 +1,6 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, type ReactNode, useCallback } from "react"
-import { createChat, addMessageToChat, getMessagesForChat } from "@/lib/mongoose-utils"
 import { generateChatResponse } from "@/lib/gemini"
 import { useLanguage } from "@/components/language-provider"
 
@@ -21,7 +20,6 @@ type ChatbotContextType = {
   messages: Message[]
   isLoading: boolean
   sendMessage: (content: string) => Promise<void>
-  chatId: string | null
   isRecording: boolean
   toggleRecording: () => void
 }
@@ -40,7 +38,6 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
       originalContent: "👋 Hello! I'm your AI assistant specialized in Indian government schemes. I can help you:\n\n• Find schemes you're eligible for\n• Explain application processes\n• Provide information on benefits and deadlines\n• Guide you through documentation requirements\n\nHow may I assist you today?",
     },
   ])
-  const [chatId, setChatId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
 
@@ -138,93 +135,8 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timeoutId);
   }, [language, isOpen, messages, translate]);
 
-  // Initialize chat on first open
-  useEffect(() => {
-    const initializeChat = async () => {
-      // Only run if isOpen is true and we don't have a chatId yet
-      if (isOpen && !chatId) {
-        setIsLoading(true); // Indicate loading during initialization
-        try {
-          // 1. Attempt to create or retrieve a chat session ID
-          const chat = await createChat(); // Assuming createChat handles finding existing/creating new
-          if (!chat || !chat._id) {
-             console.error("Failed to create or retrieve chat session.");
-             setIsLoading(false);
-             return;
-          }
-          const currentChatId = chat._id.toString();
-          setChatId(currentChatId);
-
-          // 2. Load existing messages for this chat
-          const existingMessages = await getMessagesForChat(currentChatId);
-
-          // 3. Determine the initial messages for the UI state
-          let initialMessagesState: Message[];
-          
-          // Get appropriate welcome message based on language
-          let welcomeMessageContent = "👋 Hello! I'm your AI assistant specialized in Indian government schemes. I can help you:\n\n• Find schemes you're eligible for\n• Explain application processes\n• Provide information on benefits and deadlines\n• Guide you through documentation requirements\n\nHow may I assist you today?";
-          
-          // If language is not English, translate welcome message
-          if (language !== "en") {
-            try {
-              welcomeMessageContent = await translate(welcomeMessageContent);
-            } catch (error) {
-              console.error("Error translating welcome message:", error);
-            }
-          }
-          
-          if (existingMessages && existingMessages.length > 0) {
-             // If history exists, map it to the Message type for UI
-             initialMessagesState = [
-                // Prepend the static welcome message for UI consistency
-                { 
-                  id: "welcome", 
-                  content: welcomeMessageContent, 
-                  role: "assistant", 
-                  timestamp: new Date(),
-                  originalContent: "👋 Hello! I'm your AI assistant specialized in Indian government schemes. I can help you:\n\n• Find schemes you're eligible for\n• Explain application processes\n• Provide information on benefits and deadlines\n• Guide you through documentation requirements\n\nHow may I assist you today?"
-                }, 
-                ...existingMessages.map(msg => ({
-                  id: msg._id?.toString() || `msg-${Date.now()}-${Math.random()}`,
-                  content: msg.content,
-                  originalContent: msg.content,
-                  role: msg.role as ('user' | 'assistant'), // Assert type from DB
-                  timestamp: new Date(msg.created_at)
-                }))
-             ];
-          } else {
-             // If no history exists, start with only the welcome message
-             initialMessagesState = [
-                { 
-                  id: "welcome", 
-                  content: welcomeMessageContent, 
-                  originalContent: "👋 Hello! I'm your AI assistant specialized in Indian government schemes. I can help you:\n\n• Find schemes you're eligible for\n• Explain application processes\n• Provide information on benefits and deadlines\n• Guide you through documentation requirements\n\nHow may I assist you today?",
-                  role: "assistant", 
-                  timestamp: new Date() 
-                }
-             ];
-             // Add the welcome message to the DB only if it's a truly new chat
-             await addMessageToChat(currentChatId, "assistant", welcomeMessageContent);
-          }
-
-          // 4. Set the UI state
-          setMessages(initialMessagesState);
-
-        } catch (error) {
-          console.error("Error initializing chat:", error);
-          // Optionally set an error state for the UI
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    initializeChat();
-  // Remove 'messages' from dependencies to avoid re-running on message state changes
-  }, [isOpen, chatId, language, translate]);
-
   const sendMessage = useCallback(async (content: string) => {
-    if (!content.trim() || !chatId) return
+    if (!content.trim()) return
 
     try {
       setIsLoading(true)
@@ -239,20 +151,9 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
         timestamp: new Date(),
       }
       
-      console.log("Adding user message with ID:", userMessageId);
+      // Update UI immediately with user message
+      setMessages(prevMessages => [...prevMessages, userMessage]);
       
-      // Update UI immediately with user message - important to use a function to get latest state
-      setMessages(prevMessages => {
-        console.log("Previous messages count:", prevMessages.length);
-        return [...prevMessages, userMessage];
-      });
-      
-      // Add user message to database
-      const savedUserMessage = await addMessageToChat(chatId, "user", content)
-      if (!savedUserMessage) {
-        console.error("Failed to save user message to database");
-      }
-
       // Prepare messages for AI context - use only content, not IDs or timestamps
       const conversationHistory = messages
         .filter(msg => msg.id !== "welcome") // Exclude welcome message
@@ -278,11 +179,6 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
       // Add bot message to UI
       setMessages(prevMessages => [...prevMessages, botMessage])
       
-      // Add bot message to database
-      const savedBotMessage = await addMessageToChat(chatId, "assistant", aiResponse)
-      if (!savedBotMessage) {
-        console.error("Failed to save bot message to database");
-      }
     } catch (error) {
       console.error("Error sending message:", error)
       
@@ -299,7 +195,7 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false)
     }
-  }, [chatId, messages])
+  }, [messages])
 
   const contextValue: ChatbotContextType = {
     isOpen,
@@ -309,7 +205,6 @@ export function ChatbotProvider({ children }: { children: ReactNode }) {
     messages,
     isLoading,
     sendMessage,
-    chatId,
     isRecording,
     toggleRecording,
   }

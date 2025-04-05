@@ -39,6 +39,23 @@ export interface IBookmark extends Document {
   created_at: Date;
 }
 
+// User interface for authentication and preferences
+export interface IUser extends Document {
+  email: string;
+  password: string;
+  name: string;
+  preferences: {
+    categories: string[];
+    eligibility: string[];
+    income_level?: string;
+    min_age?: number;
+    max_age?: number;
+    location?: string;
+    occupation?: string;
+  };
+  created_at: Date;
+}
+
 // Scheme Schema
 const SchemeSchema = new Schema<IScheme>({
   title: { type: String, required: true },
@@ -82,6 +99,23 @@ const BookmarkSchema = new Schema<IBookmark>({
   created_at: { type: Date, default: Date.now }
 });
 
+// User Schema
+const UserSchema = new Schema<IUser>({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  name: { type: String, required: true },
+  preferences: {
+    categories: { type: [String], default: [] },
+    eligibility: { type: [String], default: [] },
+    income_level: { type: String },
+    min_age: { type: Number },
+    max_age: { type: Number },
+    location: { type: String },
+    occupation: { type: String },
+  },
+  created_at: { type: Date, default: Date.now }
+});
+
 // Create models safely
 // Check if mongoose.models exists to prevent "Cannot read properties of undefined" error
 const models = mongoose.models || {};
@@ -100,3 +134,6 @@ export const MessageModel = (models.Message as mongoose.Model<IMessage>) ||
   
 export const BookmarkModel = (models.Bookmark as mongoose.Model<IBookmark>) || 
   mongoose.model<IBookmark>('Bookmark', BookmarkSchema); 
+
+export const UserModel = (models.User as mongoose.Model<IUser>) || 
+  mongoose.model<IUser>('User', UserSchema); 

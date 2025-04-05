@@ -9,6 +9,7 @@ import { ChatbotProvider } from "@/components/chatbot/chatbot-provider"
 import { Chatbot } from "@/components/chatbot/chatbot"
 import { LanguageProvider } from "@/components/language-provider"
 import { PageTransition } from "@/components/page-transition"
+import { AuthProvider } from "@/hooks/useAuth"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -30,18 +31,20 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
-          <LanguageProvider>
-            <ChatbotProvider>
-              <div className="flex flex-col min-h-screen">
-                <Header />
-                <main className="flex-1">
-                  <PageTransition>{children}</PageTransition>
-                </main>
-                <Chatbot />
-                <Footer />
-              </div>
-            </ChatbotProvider>
-          </LanguageProvider>
+          <AuthProvider>
+            <LanguageProvider>
+              <ChatbotProvider>
+                <div className="flex flex-col min-h-screen">
+                  <Header />
+                  <main className="flex-1">
+                    <PageTransition>{children}</PageTransition>
+                  </main>
+                  <Chatbot />
+                  <Footer />
+                </div>
+              </ChatbotProvider>
+            </LanguageProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

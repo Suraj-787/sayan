@@ -15,7 +15,7 @@ export async function generateChatResponse(
 
     // Initialize API
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Create system prompt
     const systemPrompt = `You are a knowledgeable government schemes assistant for Indian citizens. Your purpose is to:

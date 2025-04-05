@@ -34,6 +34,132 @@ function toObjectId(id: string): mongoose.Types.ObjectId {
   }
 }
 
+interface SchemeFilters {
+  categories?: string[];
+  eligibility?: string[];
+  income_level?: string;
+  min_age?: number;
+  max_age?: number;
+  location?: string;
+}
+
+// Get schemes with filtering
+export async function getFilteredSchemes(filters: SchemeFilters = {}): Promise<IScheme[]> {
+  try {
+    await dbConnect();
+    
+    const query: any = {};
+    
+    // Add category filter
+    if (filters.categories && filters.categories.length > 0) {
+      // Search for any of the categories (OR condition)
+      query.category = { 
+        $regex: new RegExp(filters.categories.join('|'), 'i') 
+      };
+    }
+    
+    // Add eligibility filter
+    if (filters.eligibility && filters.eligibility.length > 0) {
+      // Search for any of the eligibility criteria (OR condition)
+      query.eligibility = { 
+        $regex: new RegExp(filters.eligibility.join('|'), 'i') 
+      };
+    }
+    
+    // Add income level filter
+    if (filters.income_level && filters.income_level !== 'any') {
+      query.eligibility = {
+        ...query.eligibility,
+        $regex: new RegExp(filters.income_level, 'i') 
+      };
+    }
+    
+    // Add age range filter
+    const ageConditions = [];
+    
+    if (filters.min_age !== undefined || filters.max_age !== undefined) {
+      // Handle min age
+      if (filters.min_age !== undefined) {
+        ageConditions.push(
+          { eligibility: { $regex: new RegExp(`\\babove ${filters.min_age}\\b`, 'i') } },
+          { eligibility: { $regex: new RegExp(`\\bover ${filters.min_age}\\b`, 'i') } },
+          { eligibility: { $regex: new RegExp(`\\bfrom ${filters.min_age}\\b`, 'i') } },
+          { eligibility: { $regex: new RegExp(`\\baged ${filters.min_age}\\b`, 'i') } }
+        );
+        
+        // Handle age ranges in eligibility text (e.g., "18-35 years")
+        for (let i = Math.max(0, filters.min_age - 5); i <= filters.min_age; i += 5) {
+          const upperBound = i + 5;
+          ageConditions.push({ eligibility: { $regex: new RegExp(`\\b${i}-${upperBound}\\b`, 'i') } });
+          
+          // Also look for common ranges
+          for (let j = upperBound + 5; j <= upperBound + 20; j += 5) {
+            ageConditions.push({ eligibility: { $regex: new RegExp(`\\b${i}-${j}\\b`, 'i') } });
+          }
+        }
+      }
+      
+      // Handle max age
+      if (filters.max_age !== undefined) {
+        ageConditions.push(
+          { eligibility: { $regex: new RegExp(`\\bbelow ${filters.max_age}\\b`, 'i') } },
+          { eligibility: { $regex: new RegExp(`\\bunder ${filters.max_age}\\b`, 'i') } },
+          { eligibility: { $regex: new RegExp(`\\bup to ${filters.max_age}\\b`, 'i') } }
+        );
+        
+        // Handle age ranges in eligibility text
+        for (let i = Math.max(0, filters.max_age - 20); i <= filters.max_age; i += 5) {
+          const upperBound = Math.min(i + 5, filters.max_age);
+          ageConditions.push({ eligibility: { $regex: new RegExp(`\\b${i}-${upperBound}\\b`, 'i') } });
+        }
+      }
+      
+      // If both min and max age are provided, also match specific ages in the range
+      if (filters.min_age !== undefined && filters.max_age !== undefined) {
+        for (let age = filters.min_age; age <= filters.max_age; age++) {
+          ageConditions.push({ eligibility: { $regex: new RegExp(`\\b${age}\\b`, 'i') } });
+        }
+      }
+      
+      // If we already have an eligibility condition, we need to merge it with age conditions
+      if (query.eligibility) {
+        const existingEligibilityCondition = { ...query.eligibility };
+        // Add the age condition using $and to combine with existing eligibility filters
+        query.$and = [
+          { eligibility: existingEligibilityCondition },
+          { $or: ageConditions }
+        ];
+        delete query.eligibility;
+      } else {
+        // Otherwise just add the age conditions directly
+        query.$or = ageConditions;
+      }
+    }
+    
+    // Add location filter
+    if (filters.location && filters.location !== 'any') {
+      // Add location to query - search in title, description and eligibility
+      const locationRegex = new RegExp(filters.location, 'i');
+      query.$or = [
+        ...(query.$or || []),
+        { title: { $regex: locationRegex } },
+        { description: { $regex: locationRegex } },
+        { eligibility: { $regex: locationRegex } }
+      ];
+    }
+    
+    // Get schemes matching the filters
+    const schemes = await SchemeModel.find(query)
+      .sort({ created_at: -1 })
+      .lean();
+    
+    return schemes;
+  } catch (error) {
+    console.error('Error fetching filtered schemes:', error);
+    return [];
+  }
+}
+
 // Seed database with initial data
 export async function seedDatabase() {
   try {
@@ -315,6 +441,21 @@ export async function getUserBookmarks(userId: string): Promise<IScheme[]> {
     return schemes;
   } catch (error) {
     console.error(`Error fetching bookmarks for user with ID ${userId}:`, error);
+    return [];
+  }
+}
+
+// Get all FAQs
+export async function getAllFAQs(): Promise<IFAQ[]> {
+  try {
+    await dbConnect();
+    const faqs = await FAQModel.find()
+      .sort({ created_at: -1 })
+      .lean();
+    
+    return faqs;
+  } catch (error) {
+    console.error('Error fetching FAQs:', error);
     return [];
   }
 } 

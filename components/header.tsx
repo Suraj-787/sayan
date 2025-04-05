@@ -3,17 +3,28 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { LanguageSelector } from "@/components/language-selector"
-import { MessageSquare, Moon, Sun, Menu, X } from "lucide-react"
+import { MessageSquare, Moon, Sun, Menu, X, User, LogOut } from "lucide-react"
 import { useChatbot } from "@/components/chatbot/chatbot-provider"
 import { usePathname } from "next/navigation"
 import { useTheme } from "@/components/theme-provider"
 import { useState } from "react"
+import { useAuth } from "@/hooks/useAuth"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 export function Header() {
   const { toggleChatbot } = useChatbot()
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { user, logout } = useAuth()
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark")
@@ -22,6 +33,23 @@ export function Header() {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen)
   }
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
+  // Get user initials for avatar
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map(n => n[0])
+      .join("")
+      .toUpperCase();
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background backdrop-blur-lg bg-opacity-80">
@@ -73,6 +101,18 @@ export function Header() {
           >
             About
           </Link>
+          {user && (
+            <Link
+              href="/preferences"
+              className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${
+                pathname === "/preferences"
+                  ? "text-primary after:bg-primary after:w-full"
+                  : "text-foreground/70 hover:text-foreground after:bg-primary"
+              }`}
+            >
+              My Preferences
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -101,6 +141,40 @@ export function Header() {
           >
             <MessageSquare className="h-5 w-5" />
           </Button>
+
+          {/* User Authentication */}
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative rounded-full h-8 w-8 p-0">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/preferences">Preferences</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="hidden md:flex gap-2">
+              <Button asChild variant="outline" size="sm">
+                <Link href="/login">Log in</Link>
+              </Button>
+              <Button asChild size="sm" className="bg-primary">
+                <Link href="/register">Sign up</Link>
+              </Button>
+            </div>
+          )}
 
           {/* Mobile Menu Button */}
           <Button
@@ -152,6 +226,49 @@ export function Header() {
             >
               About
             </Link>
+            
+            {/* Mobile Auth Links */}
+            {user ? (
+              <>
+                <Link
+                  href="/preferences"
+                  className={`text-sm font-medium p-2 rounded-md ${
+                    pathname === "/preferences"
+                      ? "bg-primary/10 text-primary"
+                      : "text-foreground/70 hover:text-foreground hover:bg-accent"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  My Preferences
+                </Link>
+                <button
+                  className="text-sm font-medium p-2 rounded-md text-destructive hover:bg-destructive/10 text-left"
+                  onClick={() => {
+                    handleLogout();
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-sm font-medium p-2 rounded-md text-foreground/70 hover:text-foreground hover:bg-accent"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/register"
+                  className="text-sm font-medium p-2 rounded-md bg-primary text-primary-foreground"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       )}
