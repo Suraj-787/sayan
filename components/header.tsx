@@ -116,21 +116,9 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <LanguageSelector />
+          
 
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            className="rounded-full"
-          >
-            {theme === "dark" ? (
-              <Sun className="h-5 w-5 transition-transform hover:rotate-45" />
-            ) : (
-              <Moon className="h-5 w-5 transition-transform hover:-rotate-45" />
-            )}
-          </Button>
+         
 
           <Button
             variant="outline"
