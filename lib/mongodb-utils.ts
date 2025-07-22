@@ -36,7 +36,7 @@ export async function seedDatabase() {
         
         // Use MongoDB upsert
         await schemesCollection.updateOne(
-          { _id: scheme.id },
+          { _id: new ObjectId(scheme.id) },
           { $set: schemeWithDate },
           { upsert: true }
         );
@@ -59,7 +59,7 @@ export async function seedDatabase() {
         
         // Use MongoDB upsert
         await faqsCollection.updateOne(
-          { _id: faq.id },
+          { _id: new ObjectId(faq.id) },
           { $set: faqWithDate },
           { upsert: true }
         );
@@ -87,7 +87,7 @@ export async function getAllSchemes(): Promise<Scheme[]> {
       .sort({ created_at: -1 })
       .toArray();
     
-    return schemes as Scheme[];
+    return schemes as unknown as Scheme[];
   } catch (error) {
     console.error('Error fetching schemes:', error);
     return [];
@@ -98,7 +98,7 @@ export async function getAllSchemes(): Promise<Scheme[]> {
 export async function getSchemeById(id: string): Promise<Scheme | null> {
   try {
     const collection = await getCollection(Collections.SCHEMES);
-    const scheme = await collection.findOne({ _id: id });
+    const scheme = await collection.findOne({ _id: new ObjectId(id) });
     
     return scheme as Scheme | null;
   } catch (error) {
@@ -121,7 +121,8 @@ export async function createChat(userId?: string): Promise<Chat | null> {
     if (result.acknowledged) {
       return {
         _id: result.insertedId.toString(),
-        ...chat
+        user_id: userId || undefined,
+        created_at: chat.created_at
       };
     }
     
@@ -185,7 +186,7 @@ export async function getMessagesForChat(chatId: string): Promise<Message[]> {
       .sort({ created_at: 1 })
       .toArray();
     
-    return messages as Message[];
+    return messages as unknown as Message[];
   } catch (error) {
     console.error(`Error fetching messages for chat with ID ${chatId}:`, error);
     return [];
@@ -273,7 +274,7 @@ export async function getUserBookmarks(userId: string): Promise<Scheme[]> {
       }
     }
     
-    return schemes as Scheme[];
+    return schemes as unknown as Scheme[];
   } catch (error) {
     console.error(`Error fetching bookmarks for user with ID ${userId}:`, error);
     return [];

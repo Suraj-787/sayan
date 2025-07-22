@@ -47,6 +47,7 @@ export interface IUser extends Document {
   preferences: {
     categories: string[];
     eligibility: string[];
+    scheme_types?: string[];
     income_level?: string;
     min_age?: number;
     max_age?: number;
@@ -107,6 +108,7 @@ const UserSchema = new Schema<IUser>({
   preferences: {
     categories: { type: [String], default: [] },
     eligibility: { type: [String], default: [] },
+    scheme_types: { type: [String], default: [] },
     income_level: { type: String },
     min_age: { type: Number },
     max_age: { type: Number },

@@ -15,7 +15,7 @@ export async function generateChatResponse(
 
     // Initialize API
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     // Create system prompt
     const systemPrompt = `You are a knowledgeable government schemes assistant for Indian citizens. Your purpose is to:
@@ -33,6 +33,8 @@ Format your responses in a clean, readable structure:
 • Use line breaks between paragraphs for better readability
 • If highlighting important information, use clear headers like "ELIGIBILITY:" instead of markdown formatting
 • Don't use markdown formatting like **, #, or backticks
+• Try to give the output as much needed as possible and accurate to the question of user don't give too much output
+
 
 Focus on being helpful, clear, and specific. When you don't know an answer, acknowledge it and suggest where they might find more information.
 

@@ -90,8 +90,8 @@ export function getCurrentUserId(request: NextRequest): string | null {
 }
 
 // Server-side function to get the current user ID from cookies
-export function getUserIdFromCookies(): string | null {
-  const cookieStore = cookies();
+export async function getUserIdFromCookies(): Promise<string | null> {
+  const cookieStore = await cookies();
   const token = cookieStore.get(COOKIE_NAME)?.value;
   
   if (!token) return null;

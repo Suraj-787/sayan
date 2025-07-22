@@ -9,6 +9,7 @@ type User = {
   preferences: {
     categories: string[];
     eligibility: string[];
+    scheme_types?: string[];
     income_level?: string;
     min_age?: number;
     max_age?: number;

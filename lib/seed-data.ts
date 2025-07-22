@@ -30,7 +30,7 @@ export const schemes = [
     application_process: "Apply online through the official PM-KISAN portal or visit your nearest Common Service Centre",
     documents: ["Aadhaar Card", "Land Records", "Bank Account Details"],
     deadline: "Ongoing scheme with quarterly payments",
-    website: "https://pmkisan.gov.in/",
+    website: "https://pmkisan.gov.in/RegistrationFormNew.aspx",
     created_at: new Date().toISOString(),
   },
   {
@@ -43,7 +43,7 @@ export const schemes = [
     application_process: "Apply through the official PMAY portal or visit your local municipal office",
     documents: ["Aadhaar Card", "Income Certificate", "Property Documents", "Bank Account Details"],
     deadline: "Ongoing",
-    website: "https://pmaymis.gov.in/",
+    website: "https://pmaymis.gov.in/Auth/Login.aspx",
     created_at: new Date().toISOString(),
   },
   {
@@ -199,7 +199,7 @@ export const schemes = [
     application_process: "Download the PM-WANI app and register with a valid ID",
     documents: ["Any Government ID", "Mobile Number"],
     deadline: "Ongoing access",
-    website: "https://dot.gov.in/pm-wani",
+    website: "https://pmwani.gov.in/wani/pdo?ln=en",
     created_at: new Date().toISOString(),
   },
   {

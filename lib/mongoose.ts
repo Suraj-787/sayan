@@ -11,10 +11,7 @@ interface CachedConnection {
 
 // Add mongoose to global types
 declare global {
-  var mongoose: { 
-    conn: typeof mongoose | null;
-    promise: Promise<typeof mongoose> | null;
-  } | undefined;
+  var mongoose: CachedConnection | undefined;
 }
 
 // Global variables

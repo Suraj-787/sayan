@@ -41,7 +41,7 @@ export function SchemeFAQ({ schemeId, className = "" }: SchemeFAQProps) {
         
         // Map to the format we need
         const formattedFAQs = faqData.map(faq => ({
-          _id: faq._id.toString(),
+          _id: (faq._id as any).toString(),
           question: faq.question,
           answer: faq.answer
         }))

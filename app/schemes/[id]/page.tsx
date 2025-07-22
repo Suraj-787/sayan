@@ -8,14 +8,14 @@ import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
 interface SchemePageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function SchemePage({ params }: SchemePageProps) {
   // Properly await the params object to satisfy Next.js requirements
-  const { id } = await Promise.resolve(params);
+  const { id } = await params;
   
   // Get scheme details using Mongoose utils
   const scheme = await getSchemeById(id);
@@ -27,7 +27,7 @@ export default async function SchemePage({ params }: SchemePageProps) {
   // Serialize the MongoDB document to plain object to avoid "Objects with toJSON methods are not supported" error
   const serializedScheme = {
     ...scheme,
-    _id: scheme._id.toString(),
+    _id: (scheme._id as any).toString(),
     created_at: scheme.created_at instanceof Date ? scheme.created_at.toISOString() : scheme.created_at,
   };
   

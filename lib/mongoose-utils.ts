@@ -37,6 +37,7 @@ function toObjectId(id: string): mongoose.Types.ObjectId {
 interface SchemeFilters {
   categories?: string[];
   eligibility?: string[];
+  scheme_types?: string[];
   income_level?: string;
   min_age?: number;
   max_age?: number;
@@ -49,35 +50,51 @@ export async function getFilteredSchemes(filters: SchemeFilters = {}): Promise<I
     await dbConnect();
     
     const query: any = {};
+    const andConditions: any[] = [];
     
     // Add category filter
     if (filters.categories && filters.categories.length > 0) {
-      // Search for any of the categories (OR condition)
-      query.category = { 
-        $regex: new RegExp(filters.categories.join('|'), 'i') 
-      };
+      andConditions.push({
+        category: { 
+          $regex: new RegExp(filters.categories.join('|'), 'i') 
+        }
+      });
+    }
+    
+    // Add scheme types filter
+    if (filters.scheme_types && filters.scheme_types.length > 0) {
+      const schemeTypeRegex = new RegExp(filters.scheme_types.join('|'), 'i');
+      andConditions.push({
+        $or: [
+          { title: { $regex: schemeTypeRegex } },
+          { description: { $regex: schemeTypeRegex } },
+          { eligibility: { $regex: schemeTypeRegex } }
+        ]
+      });
     }
     
     // Add eligibility filter
     if (filters.eligibility && filters.eligibility.length > 0) {
-      // Search for any of the eligibility criteria (OR condition)
-      query.eligibility = { 
-        $regex: new RegExp(filters.eligibility.join('|'), 'i') 
-      };
+      andConditions.push({
+        eligibility: { 
+          $regex: new RegExp(filters.eligibility.join('|'), 'i') 
+        }
+      });
     }
-    
+
     // Add income level filter
     if (filters.income_level && filters.income_level !== 'any') {
-      query.eligibility = {
-        ...query.eligibility,
-        $regex: new RegExp(filters.income_level, 'i') 
-      };
+      andConditions.push({
+        eligibility: { 
+          $regex: new RegExp(filters.income_level, 'i') 
+        }
+      });
     }
-    
+
     // Add age range filter
-    const ageConditions = [];
-    
     if (filters.min_age !== undefined || filters.max_age !== undefined) {
+      const ageConditions = [];
+      
       // Handle min age
       if (filters.min_age !== undefined) {
         ageConditions.push(
@@ -121,31 +138,26 @@ export async function getFilteredSchemes(filters: SchemeFilters = {}): Promise<I
         }
       }
       
-      // If we already have an eligibility condition, we need to merge it with age conditions
-      if (query.eligibility) {
-        const existingEligibilityCondition = { ...query.eligibility };
-        // Add the age condition using $and to combine with existing eligibility filters
-        query.$and = [
-          { eligibility: existingEligibilityCondition },
-          { $or: ageConditions }
-        ];
-        delete query.eligibility;
-      } else {
-        // Otherwise just add the age conditions directly
-        query.$or = ageConditions;
+      if (ageConditions.length > 0) {
+        andConditions.push({ $or: ageConditions });
       }
     }
     
     // Add location filter
     if (filters.location && filters.location !== 'any') {
-      // Add location to query - search in title, description and eligibility
       const locationRegex = new RegExp(filters.location, 'i');
-      query.$or = [
-        ...(query.$or || []),
-        { title: { $regex: locationRegex } },
-        { description: { $regex: locationRegex } },
-        { eligibility: { $regex: locationRegex } }
-      ];
+      andConditions.push({
+        $or: [
+          { title: { $regex: locationRegex } },
+          { description: { $regex: locationRegex } },
+          { eligibility: { $regex: locationRegex } }
+        ]
+      });
+    }
+    
+    // Build final query
+    if (andConditions.length > 0) {
+      query.$and = andConditions;
     }
     
     // Get schemes matching the filters
@@ -158,9 +170,7 @@ export async function getFilteredSchemes(filters: SchemeFilters = {}): Promise<I
     console.error('Error fetching filtered schemes:', error);
     return [];
   }
-}
-
-// Seed database with initial data
+}// Seed database with initial data
 export async function seedDatabase() {
   try {
     await dbConnect();

@@ -57,35 +57,59 @@ export function SchemeList() {
     prevLanguageRef.current = language
 
     try {
-      // Fetch schemes from the server
-      const response = await fetch('/api/schemes');
+      // Build query parameters from search params
+      const params = new URLSearchParams()
+      
+      // Get filter parameters and pass them to API
+      const categoryParam = searchParams.get("category")
+      const eligibilityParam = searchParams.get("eligibility")
+      const schemeTypesParam = searchParams.get("scheme_types")
+      const incomeLevelParam = searchParams.get("income_level")
+      const minAgeParam = searchParams.get("min_age")
+      const maxAgeParam = searchParams.get("max_age")
+      const locationParam = searchParams.get("location")
+      const searchParam = searchParams.get("search")
+      
+      if (categoryParam) {
+        params.append("category", categoryParam)
+      }
+      
+      if (eligibilityParam && eligibilityParam !== "all") {
+        params.append("eligibility", eligibilityParam)
+      }
+      
+      if (schemeTypesParam) {
+        params.append("scheme_types", schemeTypesParam)
+      }
+      
+      if (incomeLevelParam && incomeLevelParam !== "any") {
+        params.append("income_level", incomeLevelParam)
+      }
+      
+      if (minAgeParam) {
+        params.append("min_age", minAgeParam)
+      }
+      
+      if (maxAgeParam) {
+        params.append("max_age", maxAgeParam)
+      }
+      
+      if (locationParam && locationParam !== "any") {
+        params.append("location", locationParam)
+      }
+      
+      // Construct API URL with query parameters
+      const apiUrl = `/api/schemes${params.toString() ? `?${params.toString()}` : ''}`
+      
+      // Fetch schemes from the server with filters
+      const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error('Failed to fetch schemes');
       }
       
       let fetchedSchemes: SerializedScheme[] = await response.json();
       
-      // Get filter parameters
-      const categoryParam = searchParams.get("category")
-      const eligibilityParam = searchParams.get("eligibility")
-      const searchParam = searchParams.get("search")
-  
-      // Filter schemes based on URL parameters
-      if (categoryParam) {
-        const categories = categoryParam.split(",")
-        fetchedSchemes = fetchedSchemes.filter((scheme) => 
-          categories.includes(scheme.category.toLowerCase())
-        )
-      }
-  
-      if (eligibilityParam && eligibilityParam !== "all") {
-        // This assumes eligibility field contains keywords like "farmers", "students", etc.
-        const eligibilityLower = eligibilityParam.toLowerCase()
-        fetchedSchemes = fetchedSchemes.filter(
-          (scheme) => scheme.eligibility.toLowerCase().includes(eligibilityLower)
-        )
-      }
-  
+      // Only apply client-side search filtering (since it's not implemented on backend)
       if (searchParam) {
         const searchLower = searchParam.toLowerCase()
         fetchedSchemes = fetchedSchemes.filter(

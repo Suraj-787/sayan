@@ -1,10 +1,15 @@
+"use client"
+
 import Link from "next/link"
 import { Search } from "@/components/search"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Globe, MessageSquare, SearchIcon } from "lucide-react"
 import { FeaturedSchemes } from "@/components/featured-schemes"
+import { useChatbot } from "@/components/chatbot/chatbot-provider"
 
 export default function Home() {
+  const { openChatbot } = useChatbot()
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -138,14 +143,13 @@ export default function Home() {
                 size="lg"
                 variant="secondary"
                 className="bg-white text-primary hover:bg-white/90 btn-hover-effect group"
-                asChild
+                onClick={openChatbot}
               >
-                <Link href="/schemes" className="flex items-center">
+                <span className="flex items-center">
                   Ask AI Assistant
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
+                  <MessageSquare className="ml-2 h-4 w-4" />
+                </span>
               </Button>
-              
             </div>
           </div>
         </div>

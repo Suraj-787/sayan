@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
     // Extract filter parameters
     const category = searchParams.get('category');
     const eligibility = searchParams.get('eligibility');
+    const scheme_types = searchParams.get('scheme_types');
     const income_level = searchParams.get('income_level');
     const min_age = searchParams.get('min_age');
     const max_age = searchParams.get('max_age');
@@ -24,6 +25,10 @@ export async function GET(req: NextRequest) {
     
     if (eligibility) {
       filters.eligibility = eligibility.split(',');
+    }
+    
+    if (scheme_types) {
+      filters.scheme_types = scheme_types.split(',');
     }
     
     if (income_level && income_level !== 'any') {

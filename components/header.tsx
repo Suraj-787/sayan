@@ -3,12 +3,12 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { LanguageSelector } from "@/components/language-selector"
-import { MessageSquare, Moon, Sun, Menu, X, User, LogOut } from "lucide-react"
-import { useChatbot } from "@/components/chatbot/chatbot-provider"
+import { Moon, Sun, Menu, X, User, LogOut } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useTheme } from "@/components/theme-provider"
 import { useState } from "react"
 import { useAuth } from "@/hooks/useAuth"
+import { ChatbotButton } from "@/components/chatbot/chatbot-button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,11 +20,10 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 export function Header() {
-  const { toggleChatbot } = useChatbot()
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { user, logout } = useAuth()
+  const { user, logout, loading } = useAuth()
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark")
@@ -92,6 +91,16 @@ export function Header() {
             Schemes
           </Link>
           <Link
+            href="/chatbot"
+            className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${
+              pathname === "/chatbot"
+                ? "text-primary after:bg-primary after:w-full"
+                : "text-foreground/70 hover:text-foreground after:bg-primary"
+            }`}
+          >
+            AI Assistant
+          </Link>
+          <Link
             href="/about"
             className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${
               pathname === "/about"
@@ -101,7 +110,7 @@ export function Header() {
           >
             About
           </Link>
-          {user && (
+          {!loading && user && (
             <Link
               href="/preferences"
               className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${
@@ -132,18 +141,13 @@ export function Header() {
             )}
           </Button>
 
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={toggleChatbot}
-            aria-label="Open AI Assistant"
-            className="rounded-full border-primary text-primary hover:bg-primary/10 hover:text-primary"
-          >
-            <MessageSquare className="h-5 w-5" />
-          </Button>
+          <ChatbotButton 
+            variant="outline" 
+            className="border-primary text-primary hover:bg-primary/10 hover:text-primary" 
+          />
 
           {/* User Authentication */}
-          {user ? (
+          {!loading && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative rounded-full h-8 w-8 p-0">
@@ -165,7 +169,7 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
+          ) : !loading ? (
             <div className="hidden md:flex gap-2">
               <Button asChild variant="outline" size="sm">
                 <Link href="/login">Log in</Link>
@@ -174,7 +178,7 @@ export function Header() {
                 <Link href="/register">Sign up</Link>
               </Button>
             </div>
-          )}
+          ) : null}
 
           {/* Mobile Menu Button */}
           <Button
@@ -216,6 +220,17 @@ export function Header() {
               Schemes
             </Link>
             <Link
+              href="/chatbot"
+              className={`text-sm font-medium p-2 rounded-md ${
+                pathname === "/chatbot"
+                  ? "bg-primary/10 text-primary"
+                  : "text-foreground/70 hover:text-foreground hover:bg-accent"
+              }`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              AI Assistant
+            </Link>
+            <Link
               href="/about"
               className={`text-sm font-medium p-2 rounded-md ${
                 pathname === "/about"
@@ -228,7 +243,7 @@ export function Header() {
             </Link>
             
             {/* Mobile Auth Links */}
-            {user ? (
+            {!loading && user ? (
               <>
                 <Link
                   href="/preferences"
@@ -251,7 +266,7 @@ export function Header() {
                   Logout
                 </button>
               </>
-            ) : (
+            ) : !loading ? (
               <>
                 <Link
                   href="/login"
@@ -268,7 +283,7 @@ export function Header() {
                   Sign up
                 </Link>
               </>
-            )}
+            ) : null}
           </nav>
         </div>
       )}
