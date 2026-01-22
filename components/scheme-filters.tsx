@@ -28,7 +28,7 @@ type FilterPreferences = {
 // Helper function to save filter preferences to localStorage
 const saveFilterPreferences = (userId: string, preferences: FilterPreferences) => {
   if (typeof window === 'undefined') return;
-  
+
   try {
     const storageKey = `sayan_filters_${userId}`;
     localStorage.setItem(storageKey, JSON.stringify(preferences));
@@ -40,7 +40,7 @@ const saveFilterPreferences = (userId: string, preferences: FilterPreferences) =
 // Helper function to load filter preferences from localStorage
 const loadFilterPreferences = (userId: string): FilterPreferences | null => {
   if (typeof window === 'undefined') return null;
-  
+
   try {
     const storageKey = `sayan_filters_${userId}`;
     const storedPrefs = localStorage.getItem(storageKey);
@@ -59,7 +59,7 @@ export function SchemeFilters() {
   // Helper function to check if user has any meaningful preferences
   const hasUserPreferences = (user: any) => {
     if (!user?.preferences) return false;
-    
+
     const prefs = user.preferences;
     return (
       (prefs.categories && prefs.categories.length > 0) ||
@@ -97,17 +97,17 @@ export function SchemeFilters() {
   useEffect(() => {
     if (user && !filtersLoaded) {
       const savedPrefs = loadFilterPreferences(user.id);
-      
+
       if (savedPrefs) {
         // Only update if there are no URL parameters or if using preferences
-        const noUrlFilters = !searchParams.has("category") && 
-                            !searchParams.has("eligibility") && 
-                            !searchParams.has("scheme_types") && 
-                            !searchParams.has("income_level") && 
-                            !searchParams.has("min_age") && 
-                            !searchParams.has("max_age") && 
-                            !searchParams.has("location");
-        
+        const noUrlFilters = !searchParams.has("category") &&
+          !searchParams.has("eligibility") &&
+          !searchParams.has("scheme_types") &&
+          !searchParams.has("income_level") &&
+          !searchParams.has("min_age") &&
+          !searchParams.has("max_age") &&
+          !searchParams.has("location");
+
         if (noUrlFilters || savedPrefs.usePreferences) {
           setCategories(savedPrefs.categories);
           setEligibility(savedPrefs.eligibility);
@@ -117,7 +117,7 @@ export function SchemeFilters() {
           setMaxAge(savedPrefs.maxAge);
           setLocation(savedPrefs.location);
           setUsePreferences(savedPrefs.usePreferences);
-          
+
           // Apply filters immediately when loading from localStorage
           if (noUrlFilters) {
             applyFiltersToUrl(
@@ -133,7 +133,7 @@ export function SchemeFilters() {
           }
         }
       }
-      
+
       setFiltersLoaded(true);
     }
   }, [user, filtersLoaded, searchParams]);
@@ -151,7 +151,7 @@ export function SchemeFilters() {
         location,
         usePreferences
       };
-      
+
       saveFilterPreferences(user.id, currentPrefs);
     }
   }, [categories, eligibility, schemeTypes, incomeLevel, minAge, maxAge, location, usePreferences, user, filtersLoaded]);
@@ -167,7 +167,7 @@ export function SchemeFilters() {
       const prefMinAge = user.preferences.min_age ? user.preferences.min_age.toString() : ""
       const prefMaxAge = user.preferences.max_age ? user.preferences.max_age.toString() : ""
       const prefLocation = user.preferences.location || "any"
-      
+
       setCategories(prefCategories)
       setEligibility(prefEligibility)
       setSchemeTypes(prefSchemeTypes)
@@ -175,7 +175,7 @@ export function SchemeFilters() {
       setMinAge(prefMinAge)
       setMaxAge(prefMaxAge)
       setLocation(prefLocation)
-      
+
       // Apply filters to URL immediately
       applyFiltersToUrl(
         prefCategories,
@@ -196,7 +196,7 @@ export function SchemeFilters() {
       setMinAge("")
       setMaxAge("")
       setLocation("any")
-      
+
       // Apply cleared filters to URL
       applyFiltersToUrl(
         [],
@@ -217,6 +217,23 @@ export function SchemeFilters() {
       setUsePreferences(false);
     }
   }, [user, usePreferences])
+
+  // Auto-apply filters when any filter changes
+  useEffect(() => {
+    // Only auto-apply if filters have been loaded and we're not in the initial load
+    if (filtersLoaded) {
+      applyFiltersToUrl(
+        categories,
+        eligibility,
+        schemeTypes,
+        incomeLevel,
+        minAge,
+        maxAge,
+        location,
+        usePreferences
+      );
+    }
+  }, [categories, eligibility, schemeTypes, incomeLevel, minAge, maxAge, location])
 
   const handleSchemeTypeChange = (schemeType: string, checked: boolean) => {
     if (checked) {
@@ -302,18 +319,7 @@ export function SchemeFilters() {
     router.push(`/schemes?${params.toString()}`)
   }
 
-  const handleApplyFilters = () => {
-    applyFiltersToUrl(
-      categories,
-      eligibility,
-      schemeTypes,
-      incomeLevel,
-      minAge,
-      maxAge,
-      location,
-      usePreferences
-    );
-  }
+  // Removed handleApplyFilters - filters now apply automatically
 
   const handleResetFilters = () => {
     setCategories([])
@@ -325,7 +331,7 @@ export function SchemeFilters() {
     setLocation("any")
     setUsePreferences(false)
     router.push("/schemes")
-    
+
     // Also clear saved preferences if user is logged in
     if (user) {
       const emptyPrefs: FilterPreferences = {
@@ -426,7 +432,7 @@ export function SchemeFilters() {
               />
               <Label htmlFor="category-skill-development">Skill Development</Label>
             </div>
-            
+
             {/* New Categories from PDF */}
             <div className="flex items-center space-x-2">
               <Checkbox
@@ -495,7 +501,7 @@ export function SchemeFilters() {
               />
               <Label htmlFor="category-sanitation">Sanitation</Label>
             </div>
-            
+
             {/* Legacy Categories for backwards compatibility */}
             <div className="flex items-center space-x-2">
               <Checkbox
@@ -561,7 +567,7 @@ export function SchemeFilters() {
               />
               <Label htmlFor="eligibility-disabled">Persons with Disabilities</Label>
             </div>
-            
+
             {/* New eligibility categories based on added schemes */}
             <div className="flex items-center space-x-2">
               <Checkbox
@@ -709,7 +715,7 @@ export function SchemeFilters() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="age-filter">Age Range</Label>
               <div className="flex items-center space-x-2">
@@ -736,7 +742,7 @@ export function SchemeFilters() {
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="location">Location/State</Label>
               <Select value={location} onValueChange={setLocation}>
@@ -746,12 +752,12 @@ export function SchemeFilters() {
                 <SelectContent>
                   <SelectItem value="any">Any location</SelectItem>
                   <SelectItem value="national">National (All India)</SelectItem>
-                  
+
                   {/* Union Territories */}
                   <SelectItem value="delhi">Delhi</SelectItem>
                   <SelectItem value="puducherry">Puducherry</SelectItem>
                   <SelectItem value="chandigarh">Chandigarh</SelectItem>
-                  
+
                   {/* Major States */}
                   <SelectItem value="andhra-pradesh">Andhra Pradesh</SelectItem>
                   <SelectItem value="bihar">Bihar</SelectItem>
@@ -769,7 +775,7 @@ export function SchemeFilters() {
                   <SelectItem value="telangana">Telangana</SelectItem>
                   <SelectItem value="uttar-pradesh">Uttar Pradesh</SelectItem>
                   <SelectItem value="west-bengal">West Bengal</SelectItem>
-                  
+
                   {/* North Eastern States */}
                   <SelectItem value="north-east">North Eastern Region</SelectItem>
                   <SelectItem value="assam">Assam</SelectItem>
@@ -780,7 +786,7 @@ export function SchemeFilters() {
                   <SelectItem value="nagaland">Nagaland</SelectItem>
                   <SelectItem value="tripura">Tripura</SelectItem>
                   <SelectItem value="sikkim">Sikkim</SelectItem>
-                  
+
                   {/* Special Categories */}
                   <SelectItem value="rural-areas">Rural Areas</SelectItem>
                   <SelectItem value="urban-areas">Urban Areas</SelectItem>
@@ -793,10 +799,9 @@ export function SchemeFilters() {
           </div>
         </div>
 
-        <div className="flex flex-col space-y-2 pt-4">
-          <Button onClick={handleApplyFilters}>Apply Filters</Button>
-          <Button variant="outline" onClick={handleResetFilters}>
-            Reset
+        <div className="pt-4">
+          <Button variant="outline" onClick={handleResetFilters} className="w-full">
+            Reset Filters
           </Button>
         </div>
       </CardContent>

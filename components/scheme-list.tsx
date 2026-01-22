@@ -59,7 +59,7 @@ export function SchemeList() {
     try {
       // Build query parameters from search params
       const params = new URLSearchParams()
-      
+
       // Get filter parameters and pass them to API
       const categoryParam = searchParams.get("category")
       const eligibilityParam = searchParams.get("eligibility")
@@ -69,46 +69,46 @@ export function SchemeList() {
       const maxAgeParam = searchParams.get("max_age")
       const locationParam = searchParams.get("location")
       const searchParam = searchParams.get("search")
-      
+
       if (categoryParam) {
         params.append("category", categoryParam)
       }
-      
+
       if (eligibilityParam && eligibilityParam !== "all") {
         params.append("eligibility", eligibilityParam)
       }
-      
+
       if (schemeTypesParam) {
         params.append("scheme_types", schemeTypesParam)
       }
-      
+
       if (incomeLevelParam && incomeLevelParam !== "any") {
         params.append("income_level", incomeLevelParam)
       }
-      
+
       if (minAgeParam) {
         params.append("min_age", minAgeParam)
       }
-      
+
       if (maxAgeParam) {
         params.append("max_age", maxAgeParam)
       }
-      
+
       if (locationParam && locationParam !== "any") {
         params.append("location", locationParam)
       }
-      
+
       // Construct API URL with query parameters
       const apiUrl = `/api/schemes${params.toString() ? `?${params.toString()}` : ''}`
-      
+
       // Fetch schemes from the server with filters
       const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error('Failed to fetch schemes');
       }
-      
+
       let fetchedSchemes: SerializedScheme[] = await response.json();
-      
+
       // Only apply client-side search filtering (since it's not implemented on backend)
       if (searchParam) {
         const searchLower = searchParam.toLowerCase()
@@ -119,7 +119,7 @@ export function SchemeList() {
             scheme.category.toLowerCase().includes(searchLower),
         )
       }
-  
+
       // Translate if needed
       if (language !== "en") {
         const translatedSchemes = await Promise.all(
@@ -161,45 +161,75 @@ export function SchemeList() {
     )
   }
 
-  if (schemes.length === 0) {
-    return (
-      <Card className="h-64">
-        <CardContent className="flex items-center justify-center h-full">
-          <div className="text-center">
-            <h3 className="text-lg font-medium">No schemes found</h3>
-            <p className="text-sm text-gray-500 mt-2">Try adjusting your filters or search terms</p>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {schemes.map((scheme) => (
-        <Card
-          key={scheme._id}
-          className="flex flex-col h-full card-hover border border-transparent hover:border-primary/20"
-        >
-          <CardHeader>
-            <Badge className="w-fit mb-2 bg-primary hover:bg-primary/90">{scheme.category}</Badge>
-            <CardTitle className="group">
-              <span className="bg-gradient-to-r from-primary to-primary bg-[length:0%_2px] bg-no-repeat bg-bottom group-hover:bg-[length:100%_2px] transition-all duration-500">
-                {scheme.title}
-              </span>
-            </CardTitle>
-            <CardDescription>{scheme.description}</CardDescription>
-          </CardHeader>
-          <CardFooter className="mt-auto pt-4">
-            <Button asChild variant="outline" className="w-full btn-hover-effect group">
-              <Link href={`/schemes/${scheme._id}`} className="flex items-center justify-center">
-                Learn More
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
+    <div className="space-y-4">
+      {/* Results Count Banner */}
+      {schemes.length > 0 && (
+        <div className="flex items-center justify-between p-4 bg-primary/5 border border-primary/20 rounded-lg">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+            <p className="text-sm font-medium">
+              <span className="text-primary font-bold">{schemes.length}</span>
+              <span className="text-foreground"> scheme{schemes.length !== 1 ? 's' : ''} found</span>
+              {searchParams.toString() && (
+                <span className="text-muted-foreground ml-2">
+                  (filtered based on your selections)
+                </span>
+              )}
+            </p>
+          </div>
+          {searchParams.toString() && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                window.location.href = '/schemes';
+              }}
+              className="text-primary hover:text-primary/80"
+            >
+              Clear Filters
             </Button>
-          </CardFooter>
-        </Card>
-      ))}
+          )}
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {schemes.length === 0 ? (
+          <Card className="col-span-2">
+            <CardContent className="flex items-center justify-center h-64">
+              <div className="text-center">
+                <h3 className="text-lg font-medium">No schemes found</h3>
+                <p className="text-sm text-muted-foreground mt-2">Try adjusting your filters or search terms</p>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          schemes.map((scheme) => (
+            <Card
+              key={scheme._id}
+              className="flex flex-col h-full card-hover border border-transparent hover:border-primary/20"
+            >
+              <CardHeader>
+                <Badge className="w-fit mb-2 bg-primary hover:bg-primary/90">{scheme.category}</Badge>
+                <CardTitle className="group">
+                  <span className="bg-gradient-to-r from-primary to-primary bg-[length:0%_2px] bg-no-repeat bg-bottom group-hover:bg-[length:100%_2px] transition-all duration-500">
+                    {scheme.title}
+                  </span>
+                </CardTitle>
+                <CardDescription>{scheme.description}</CardDescription>
+              </CardHeader>
+              <CardFooter className="mt-auto pt-4">
+                <Button asChild variant="outline" className="w-full btn-hover-effect group">
+                  <Link href={`/schemes/${scheme._id}`} className="flex items-center justify-center">
+                    Learn More
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          ))
+        )}
+      </div>
     </div>
   )
 }

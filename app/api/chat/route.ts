@@ -8,26 +8,39 @@ export async function POST(request: NextRequest) {
 
     if (!query || !messages || !Array.isArray(messages)) {
       return NextResponse.json(
-        { error: 'Invalid request body' }, 
+        { error: 'Invalid request body' },
         { status: 400 }
       )
     }
 
     // Get all schemes to provide as context
     const schemes = await getAllSchemes()
-    
-    // Generate context from schemes
+
+    // Generate optimized context from schemes (summary instead of full details)
     let context = ''
     if (schemes && schemes.length > 0) {
-      // Format scheme information as context
-      context = schemes.map(scheme => `
-Scheme: ${scheme.title}
-Category: ${scheme.category}
-Description: ${scheme.description}
-Eligibility: ${scheme.eligibility}
-Benefits: ${scheme.benefits}
-Application Process: ${scheme.application_process}
-`).join('\n\n')
+      // Provide concise scheme information to avoid overwhelming the context
+      context = `Available Government Schemes (${schemes.length} total):\n\n`
+
+      // Group schemes by category for better organization
+      const schemesByCategory: { [key: string]: any[] } = {}
+      schemes.forEach(scheme => {
+        if (!schemesByCategory[scheme.category]) {
+          schemesByCategory[scheme.category] = []
+        }
+        schemesByCategory[scheme.category].push(scheme)
+      })
+
+      // Add summary by category
+      Object.entries(schemesByCategory).forEach(([category, categorySchemes]) => {
+        context += `${category} (${categorySchemes.length} schemes):\n`
+        categorySchemes.forEach(scheme => {
+          context += `• ${scheme.title}\n`
+        })
+        context += '\n'
+      })
+
+      context += `\nFor detailed information about any specific scheme, I can provide:\n• Eligibility criteria\n• Benefits\n• Application process\n• Required documents\n• Deadlines\n• Official website`
     }
 
     // Generate response from Gemini
@@ -37,7 +50,7 @@ Application Process: ${scheme.application_process}
   } catch (error) {
     console.error('Error in chat API:', error)
     return NextResponse.json(
-      { error: 'Failed to process request' }, 
+      { error: 'Failed to process request' },
       { status: 500 }
     )
   }

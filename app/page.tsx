@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Search } from "@/components/search"
+import { EligibilityForm } from "@/components/eligibility-form"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Globe, MessageSquare, SearchIcon } from "lucide-react"
 import { FeaturedSchemes } from "@/components/featured-schemes"
@@ -24,8 +24,8 @@ export default function Home() {
                 Discover and access government schemes tailored to your needs with our AI-powered platform.
               </p>
             </div>
-            <div className="w-full max-w-2xl animate-fadeIn" style={{ animationDelay: "0.2s" }}>
-              <Search />
+            <div className="w-full animate-fadeIn" style={{ animationDelay: "0.2s" }}>
+              <EligibilityForm />
             </div>
             <div className="flex flex-col sm:flex-row gap-4 mt-6 animate-fadeIn" style={{ animationDelay: "0.4s" }}>
               <Button asChild size="lg" className="btn-hover-effect group">

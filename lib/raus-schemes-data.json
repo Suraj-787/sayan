@@ -1,0 +1,196 @@
+[
+    {
+        "title": "Namo Drone Didi Scheme",
+        "description": "A pioneering initiative to empower women Self-Help Groups (SHGs) in rural India by providing them with drones for agricultural services. The scheme aims to enhance farm productivity through drone-based pesticide and nutrient application while creating livelihood opportunities for rural women.",
+        "category": "Agriculture",
+        "eligibility": "Women members of Self-Help Groups (SHGs) in rural areas under DAY-NRLM (Deendayal Antyodaya Yojana - National Rural Livelihoods Mission). Selected SHG members must complete mandatory 15-day training including 5-day drone pilot training and 10-day agriculture application training.",
+        "benefits": "Financial assistance of up to ₹8 lakh for drone purchase with 3% interest subvention through Agriculture Infrastructure Fund (AIF). Specialized training for drone operation and agricultural applications. Opportunity to provide drone services to farmers and generate income.",
+        "application_process": "1. SHG groups register under DAY-NRLM in selected clusters. 2. One member from each SHG is selected for training. 3. Complete 15-day training program (5 days drone pilot + 10 days agriculture application). 4. Apply for financial assistance through Agriculture Infrastructure Fund. 5. Receive drone and start providing agricultural services.",
+        "documents": [
+            "SHG Membership Certificate",
+            "Aadhaar Card",
+            "Bank Account Details",
+            "Training Completion Certificate",
+            "DAY-NRLM Registration"
+        ],
+        "deadline": "Ongoing - Applications accepted throughout the year",
+        "website": "https://www.nrlm.gov.in/",
+        "ministry": "Ministry of Agriculture & Farmers Welfare",
+        "scheme_type": "Central",
+        "gender": [
+            "Female"
+        ],
+        "min_age": 18,
+        "max_age": 60,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Rural"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "No",
+        "bpl": "Both",
+        "tags": [
+            "Women Empowerment",
+            "Drone Technology",
+            "Agriculture",
+            "SHG",
+            "Rural Development",
+            "Skill Training"
+        ]
+    },
+    {
+        "title": "Prime Minister Dhan-Dhaanya Krishi Yojana",
+        "description": "Comprehensive agricultural development scheme launched in February 2025 to enhance productivity, promote crop diversification, and improve rural prosperity in 100 low-productivity districts. The scheme focuses on building rural resilience through convergence of existing programs and specialized measures.",
+        "category": "Agriculture",
+        "eligibility": "Farmers in 100 selected districts with low crop productivity, moderate crop intensity, and below-average credit parameters. Priority given to marginal and small farmers, rural women, young farmers, and landless families. Approximately 1.7 crore farmers across targeted districts are eligible.",
+        "benefits": "Enhanced agricultural productivity through improved irrigation, post-harvest storage at panchayat/block level, access to climate-resilient seeds, skill development programs, long-term and short-term credit facilities, remunerative prices for pulses (Tur, Urad, Masoor), support for vegetables and fruits production, and comprehensive market linkages.",
+        "application_process": "1. Check if your district is among the 100 selected districts. 2. Register with local agriculture department or Krishi Vigyan Kendra. 3. Join Farmer Producer Organizations (FPOs) or cooperatives for better access. 4. Apply for specific components (pulses mission, vegetables program, credit facilities) through respective channels. 5. Participate in training and capacity building programs.",
+        "documents": [
+            "Aadhaar Card",
+            "Land Records",
+            "Bank Account Details",
+            "Farmer Registration Certificate",
+            "Income Certificate"
+        ],
+        "deadline": "Ongoing scheme with rolling applications",
+        "website": "https://agricoop.nic.in/",
+        "ministry": "Ministry of Agriculture & Farmers Welfare",
+        "scheme_type": "Centrally Sponsored",
+        "gender": [
+            "All"
+        ],
+        "min_age": 18,
+        "max_age": 70,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Rural"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "No",
+        "bpl": "Both",
+        "tags": [
+            "Agriculture",
+            "Crop Diversification",
+            "Pulses",
+            "Vegetables",
+            "Fruits",
+            "Rural Development",
+            "Credit",
+            "FPO"
+        ]
+    },
+    {
+        "title": "Pradhan Mantri Kisan Maandhan Yojana (PM-KMY)",
+        "description": "Old-age pension scheme launched in 2019 providing social security to small and marginal farmers. This voluntary and contributory pension scheme ensures a guaranteed monthly pension of ₹3,000 after the age of 60, with equal contribution from the farmer and the Central Government.",
+        "category": "Finance",
+        "eligibility": "Small and marginal farmers aged between 18 and 40 years with cultivable land holdings of up to 2 hectares as per state/UT land records. Farmers must not be covered under National Pension Scheme (NPS), Employees' State Insurance Corporation (ESIC), or Employees' Provident Fund Organisation (EPFO).",
+        "benefits": "Guaranteed monthly pension of ₹3,000 after age 60. Central Government matches farmer's contribution to pension fund. Family pension of ₹1,500 per month (50% of subscriber's pension) to spouse in case of subscriber's death. Life Insurance Corporation (LIC) manages the pension fund ensuring security.",
+        "application_process": "1. Visit nearest Common Service Centre (CSC) or approach State Government nodal officer. 2. Provide Aadhaar card, land records, and bank account details. 3. Choose monthly contribution amount based on age (₹55 to ₹200). 4. Complete enrollment and receive acknowledgment. 5. Ensure regular monthly contributions through auto-debit.",
+        "documents": [
+            "Aadhaar Card",
+            "Land Records (showing holdings up to 2 hectares)",
+            "Bank Account Details with IFSC",
+            "Mobile Number",
+            "Passport Size Photograph"
+        ],
+        "deadline": "Ongoing enrollment - Can join anytime between age 18-40",
+        "website": "https://maandhan.in/",
+        "ministry": "Ministry of Agriculture & Farmers Welfare",
+        "scheme_type": "Central",
+        "gender": [
+            "All"
+        ],
+        "min_age": 18,
+        "max_age": 40,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Both"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "No",
+        "bpl": "Both",
+        "tags": [
+            "Pension",
+            "Farmers",
+            "Social Security",
+            "Old Age",
+            "Small Farmers",
+            "Marginal Farmers"
+        ]
+    },
+    {
+        "title": "National Mission on Natural Farming (NMNF)",
+        "description": "Centrally Sponsored Scheme promoting chemical-free and sustainable agricultural practices across India. With a budget of ₹2,481 crore, the mission aims to establish 15,000 clusters reaching 1 crore farmers and initiating natural farming on 7.5 lakh hectares over two years.",
+        "category": "Agriculture",
+        "eligibility": "All farmers willing to adopt natural farming methods. Priority given to farmers in willing Gram Panchayats selected for cluster development. Farmers interested in preparing natural inputs like Jeevamrit and Beejamrit and those seeking chemical-free farming practices.",
+        "benefits": "Access to 10,000 Bio-Input Resource Centres (BRCs) for natural farming inputs. Training at 2,000 Model Demonstration Farms at KVKs and Agricultural Universities. Support from 30,000 Krishi Sakhis/Community Resource Persons. Simple certification process and common branding for market access. Digital monitoring through online portal. Reduced input costs by eliminating chemical fertilizers and pesticides.",
+        "application_process": "1. Check if your Gram Panchayat is selected for cluster development. 2. Contact local Krishi Vigyan Kendra (KVK) or Agriculture Department. 3. Register for natural farming training programs. 4. Attend training on preparation of Jeevamrit, Beejamrit, and other natural inputs. 5. Join cluster activities and access Bio-Input Resource Centres. 6. Apply for certification and branding support.",
+        "documents": [
+            "Aadhaar Card",
+            "Land Records",
+            "Farmer Registration",
+            "Bank Account Details"
+        ],
+        "deadline": "Ongoing - Target to establish 15,000 clusters by 2026",
+        "website": "https://naturalfarming.dac.gov.in/",
+        "ministry": "Ministry of Agriculture & Farmers Welfare",
+        "scheme_type": "Centrally Sponsored",
+        "gender": [
+            "All"
+        ],
+        "min_age": 18,
+        "max_age": 75,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Rural"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "No",
+        "bpl": "Both",
+        "tags": [
+            "Natural Farming",
+            "Organic",
+            "Sustainable Agriculture",
+            "Chemical-Free",
+            "Jeevamrit",
+            "Beejamrit",
+            "Soil Health"
+        ]
+    }
+]

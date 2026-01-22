@@ -33,7 +33,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Helper function to safely parse JSON from localStorage
 const getStoredUser = (): User | null => {
   if (typeof window === 'undefined') return null;
-  
+
   try {
     const storedUser = localStorage.getItem('sayan_user');
     return storedUser ? JSON.parse(storedUser) : null;
@@ -94,12 +94,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!email || !email.includes('@')) {
         throw new Error('Please enter a valid email address');
       }
-      
+
       if (!password || password.length < 6) {
         throw new Error('Password must be at least 6 characters long');
       }
-
-      console.log('Sending login request', { email });
 
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -111,13 +109,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       const data = await response.json();
-      console.log('Login response status:', response.status);
 
       if (!response.ok) {
         throw new Error(data.error || 'Login failed');
       }
 
-      console.log('Login successful, user data:', data.user);
       setUser(data.user);
     } catch (err: any) {
       console.error('Login error:', err);
@@ -138,16 +134,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!name || name.trim().length < 2) {
         throw new Error('Name must be at least 2 characters long');
       }
-      
+
       if (!email || !email.includes('@')) {
         throw new Error('Please enter a valid email address');
       }
-      
+
       if (!password || password.length < 6) {
         throw new Error('Password must be at least 6 characters long');
       }
-
-      console.log('Sending registration request', { name, email });
 
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -159,13 +153,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       const data = await response.json();
-      console.log('Registration response status:', response.status);
 
       if (!response.ok) {
         throw new Error(data.error || 'Registration failed');
       }
 
-      console.log('Registration successful, user data:', data.user);
       setUser(data.user);
     } catch (err: any) {
       console.error('Registration error:', err);

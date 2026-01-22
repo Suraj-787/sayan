@@ -13,6 +13,24 @@ export interface Scheme {
   deadline: string;
   website: string;
   created_at: Date;
+
+  // New filtering fields for enhanced scheme discovery
+  gender?: string[];  // ["Male", "Female", "Transgender", "All"]
+  min_age?: number;  // Minimum age requirement
+  max_age?: number;  // Maximum age requirement
+  state?: string[];  // Indian states or ["All India"]
+  residence_area?: string[];  // ["Rural", "Urban", "Both"]
+  social_category?: string[];  // ["SC", "ST", "OBC", "General", "PVTG", "DNT", "All"]
+  differently_abled?: string;  // "Yes", "No", "Both"
+  disability_percentage?: string[];  // ["<40%", "40-59%", "60-79%", "80%+", "Any"]
+  minority?: string;  // "Yes", "No", "Both"
+  student?: string;  // "Yes", "No", "Both"
+  bpl?: string;  // "Yes", "No", "Both" (Below Poverty Line)
+
+  // Additional metadata
+  ministry?: string;  // Ministry/Department managing the scheme
+  scheme_type?: string;  // "Central", "State", "Central Sector", "Centrally Sponsored"
+  tags?: string[];  // Additional searchable tags
 }
 
 // FAQ model

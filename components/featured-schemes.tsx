@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge" 
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
@@ -44,9 +44,9 @@ export function FeaturedSchemes() {
         if (!response.ok) {
           throw new Error('Failed to fetch schemes');
         }
-        
+
         const allSchemes: SerializedScheme[] = await response.json();
-        
+
         // Get only the first 3 schemes for featured display
         const featuredSchemes = allSchemes.slice(0, 3);
         setSchemes(featuredSchemes);
@@ -77,7 +77,7 @@ export function FeaturedSchemes() {
           category: await translateText(scheme.category, language)
         }))
       );
-      
+
       setSchemes(translatedSchemes);
     };
 
@@ -106,28 +106,28 @@ export function FeaturedSchemes() {
   return (
     <div className="flex gap-6 w-full">
       {schemes.map((scheme) => (
-        <Card 
-          key={scheme._id} 
-          className="flex-1 flex flex-col h-64 card-hover border border-transparent hover:border-primary/20"
+        <Card
+          key={scheme._id}
+          className="flex-1 flex flex-col h-64 card-hover border border-transparent hover:border-primary/20 overflow-hidden"
         >
-          <CardHeader>
+          <CardHeader className="pb-3">
             <Badge className="w-fit mb-2 bg-primary hover:bg-primary/90">{scheme.category}</Badge>
-            <CardTitle className="group">
+            <CardTitle className="group text-base line-clamp-2">
               <span className="bg-gradient-to-r from-primary to-primary bg-[length:0%_2px] bg-no-repeat bg-bottom group-hover:bg-[length:100%_2px] transition-all duration-500">
                 {scheme.title}
               </span>
             </CardTitle>
-            <CardDescription>{scheme.description}</CardDescription>
+            <CardDescription className="line-clamp-2 text-sm">{scheme.description}</CardDescription>
           </CardHeader>
-          <CardFooter className="mt-auto pt-4">
+          <CardFooter className="mt-auto pt-0 pb-4 px-6">
             <Button asChild variant="outline" className="w-full btn-hover-effect group">
               <Link href={`/schemes/${scheme._id}`} className="flex items-center justify-center">
-                {language === "en" ? "Learn More" : 
+                {language === "en" ? "Learn More" :
                   language === "hi" ? "और अधिक जानें" :
-                  language === "ta" ? "மேலும் அறிக" :
-                  language === "te" ? "మరింత తెలుసుకోండి" :
-                  language === "bn" ? "আরও জানুন" :
-                  language === "mr" ? "अधिक जाणून घ्या" : "Learn More"}
+                    language === "ta" ? "மேலும் அறிக" :
+                      language === "te" ? "మరింత తెలుసుకోండి" :
+                        language === "bn" ? "আরও জানুন" :
+                          language === "mr" ? "अधिक जाणून घ्या" : "Learn More"}
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </Button>

@@ -13,12 +13,12 @@ export async function generateChatResponse(
       return "API key not configured.";
     }
 
-    // Initialize API
+    // Initialize API with stable model
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-    // Create system prompt
-    const systemPrompt = `You are a knowledgeable government schemes assistant for Indian citizens. Your purpose is to:
+    // Using gemini-1.5-flash for better free tier quota support
+    const model = genAI.getGenerativeModel({
+      model: "gemini-3-flash-preview",
+      systemInstruction: `You are a knowledgeable government schemes assistant for Indian citizens. Your purpose is to:
          
 1. Provide accurate, detailed information about government schemes in India
 2. Help users understand eligibility criteria for various schemes
@@ -46,51 +46,43 @@ For scheme-specific questions, include:
 • Important deadlines
 • Official websites or contacts
 
-Avoid political discussions and focus on providing factual, helpful information.`;
-
-    // Add context to the system prompt if provided
-    const enhancedSystemPrompt = context 
-      ? `${systemPrompt}\n\nHere is additional context about available schemes:\n${context}`
-      : systemPrompt;
-
-    // Create a simplified chat history
-    const simplifiedHistory = [];
-    
-    // Add the system message as the first message
-    simplifiedHistory.push({
-      role: "model",
-      parts: [{ text: enhancedSystemPrompt }]
+Avoid political discussions and focus on providing factual, helpful information.${context ? `\n\nHere is additional context about available schemes:\n${context}` : ''}`
     });
-    
-    // Add user messages and assistant responses
-    for (const msg of chatHistory) {
-      const apiRole = msg.role === "user" ? "user" : "model";
-      
-      // Add to history
-      simplifiedHistory.push({
-        role: apiRole,
-        parts: [{ text: msg.content }]
-      });
-    }
-    
-    // Add the current prompt
-    simplifiedHistory.push({
-      role: "user",
-      parts: [{ text: prompt }]
-    });
-    
-    // Generate the response
-    const result = await model.generateContent({
-      contents: simplifiedHistory,
+
+    // Convert chat history to Gemini format
+    const history = chatHistory.map(msg => ({
+      role: msg.role === "user" ? "user" : "model",
+      parts: [{ text: msg.content }]
+    }));
+
+    // Start chat session with history
+    const chat = model.startChat({
+      history: history,
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 1024,
-      }
+        topP: 0.95,
+        topK: 40,
+        maxOutputTokens: 2048,
+      },
     });
-    
-    return result.response.text();
-  } catch (error) {
+
+    // Send message and get response
+    const result = await chat.sendMessage(prompt);
+    const response = result.response;
+
+    return response.text();
+  } catch (error: any) {
     console.error("Error generating chat response:", error);
+
+    // Provide more specific error messages
+    if (error?.message?.includes('API key')) {
+      return "API key error. Please check your configuration.";
+    } else if (error?.message?.includes('quota')) {
+      return "API quota exceeded. Please try again later.";
+    } else if (error?.message?.includes('model')) {
+      return "Model error. The AI model may be temporarily unavailable.";
+    }
+
     return "I apologize, but I encountered an error processing your request. Please try again.";
   }
 } 

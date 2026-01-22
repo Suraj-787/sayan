@@ -2,10 +2,8 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { LanguageSelector } from "@/components/language-selector"
-import { Moon, Sun, Menu, X, User, LogOut } from "lucide-react"
+import { Menu, X, User, LogOut } from "lucide-react"
 import { usePathname } from "next/navigation"
-import { useTheme } from "@/components/theme-provider"
 import { useState } from "react"
 import { useAuth } from "@/hooks/useAuth"
 import { ChatbotButton } from "@/components/chatbot/chatbot-button"
@@ -21,13 +19,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 export function Header() {
   const pathname = usePathname()
-  const { theme, setTheme } = useTheme()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { user, logout, loading } = useAuth()
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
-  }
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen)
@@ -55,15 +48,21 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center">
-              {/* Add Logo */}
-              <img
-                src="/icons8-workflow-24.png" // Replace with the actual path to your logo
-                alt="Logo"
-                className="h-8 w-8 mr-2" // Adjust height and width as needed
-              />
-          
+            {/* Add Logo */}
+            {/* Logo */}
+            <img
+              src="/logo-light.png"
+              alt="Sayan Logo"
+              className="h-10 w-10 mr-2 dark:hidden"
+            />
+            <img
+              src="/logo-dark-pr.png"
+              alt="Sayan Logo"
+              className="h-10 w-10 mr-2 hidden dark:block"
+            />
+
             <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-                Sayan
+              Sayan
             </span>
           </Link>
         </div>
@@ -72,52 +71,47 @@ export function Header() {
         <nav className="hidden md:flex gap-6 items-center">
           <Link
             href="/"
-            className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${
-              pathname === "/"
-                ? "text-primary after:bg-primary after:w-full"
-                : "text-foreground/70 hover:text-foreground after:bg-primary"
-            }`}
+            className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${pathname === "/"
+              ? "text-primary after:bg-primary after:w-full"
+              : "text-foreground/70 hover:text-foreground after:bg-primary"
+              }`}
           >
             Home
           </Link>
           <Link
             href="/schemes"
-            className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${
-              pathname.startsWith("/schemes")
-                ? "text-primary after:bg-primary after:w-full"
-                : "text-foreground/70 hover:text-foreground after:bg-primary"
-            }`}
+            className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${pathname.startsWith("/schemes")
+              ? "text-primary after:bg-primary after:w-full"
+              : "text-foreground/70 hover:text-foreground after:bg-primary"
+              }`}
           >
             Schemes
           </Link>
           <Link
             href="/chatbot"
-            className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${
-              pathname === "/chatbot"
-                ? "text-primary after:bg-primary after:w-full"
-                : "text-foreground/70 hover:text-foreground after:bg-primary"
-            }`}
+            className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${pathname === "/chatbot"
+              ? "text-primary after:bg-primary after:w-full"
+              : "text-foreground/70 hover:text-foreground after:bg-primary"
+              }`}
           >
             AI Assistant
           </Link>
           <Link
             href="/about"
-            className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${
-              pathname === "/about"
-                ? "text-primary after:bg-primary after:w-full"
-                : "text-foreground/70 hover:text-foreground after:bg-primary"
-            }`}
+            className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${pathname === "/about"
+              ? "text-primary after:bg-primary after:w-full"
+              : "text-foreground/70 hover:text-foreground after:bg-primary"
+              }`}
           >
             About
           </Link>
           {!loading && user && (
             <Link
               href="/preferences"
-              className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${
-                pathname === "/preferences"
-                  ? "text-primary after:bg-primary after:w-full"
-                  : "text-foreground/70 hover:text-foreground after:bg-primary"
-              }`}
+              className={`text-sm font-medium relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:duration-300 ${pathname === "/preferences"
+                ? "text-primary after:bg-primary after:w-full"
+                : "text-foreground/70 hover:text-foreground after:bg-primary"
+                }`}
             >
               My Preferences
             </Link>
@@ -125,25 +119,9 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <LanguageSelector />
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-            className="rounded-full"
-          >
-            {theme === "dark" ? (
-              <Sun className="h-5 w-5 transition-transform hover:rotate-45" />
-            ) : (
-              <Moon className="h-5 w-5 transition-transform hover:-rotate-45" />
-            )}
-          </Button>
-
-          <ChatbotButton 
-            variant="outline" 
-            className="border-primary text-primary hover:bg-primary/10 hover:text-primary" 
+          <ChatbotButton
+            variant="outline"
+            className="border-primary text-primary hover:bg-primary/10 hover:text-primary"
           />
 
           {/* User Authentication */}
@@ -199,59 +177,54 @@ export function Header() {
           <nav className="container flex flex-col py-4 px-4 space-y-4">
             <Link
               href="/"
-              className={`text-sm font-medium p-2 rounded-md ${
-                pathname === "/"
-                  ? "bg-primary/10 text-primary"
-                  : "text-foreground/70 hover:text-foreground hover:bg-accent"
-              }`}
+              className={`text-sm font-medium p-2 rounded-md ${pathname === "/"
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:text-foreground hover:bg-accent"
+                }`}
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
             </Link>
             <Link
               href="/schemes"
-              className={`text-sm font-medium p-2 rounded-md ${
-                pathname.startsWith("/schemes")
-                  ? "bg-primary/10 text-primary"
-                  : "text-foreground/70 hover:text-foreground hover:bg-accent"
-              }`}
+              className={`text-sm font-medium p-2 rounded-md ${pathname.startsWith("/schemes")
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:text-foreground hover:bg-accent"
+                }`}
               onClick={() => setMobileMenuOpen(false)}
             >
               Schemes
             </Link>
             <Link
               href="/chatbot"
-              className={`text-sm font-medium p-2 rounded-md ${
-                pathname === "/chatbot"
-                  ? "bg-primary/10 text-primary"
-                  : "text-foreground/70 hover:text-foreground hover:bg-accent"
-              }`}
+              className={`text-sm font-medium p-2 rounded-md ${pathname === "/chatbot"
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:text-foreground hover:bg-accent"
+                }`}
               onClick={() => setMobileMenuOpen(false)}
             >
               AI Assistant
             </Link>
             <Link
               href="/about"
-              className={`text-sm font-medium p-2 rounded-md ${
-                pathname === "/about"
-                  ? "bg-primary/10 text-primary"
-                  : "text-foreground/70 hover:text-foreground hover:bg-accent"
-              }`}
+              className={`text-sm font-medium p-2 rounded-md ${pathname === "/about"
+                ? "bg-primary/10 text-primary"
+                : "text-foreground/70 hover:text-foreground hover:bg-accent"
+                }`}
               onClick={() => setMobileMenuOpen(false)}
             >
               About
             </Link>
-            
+
             {/* Mobile Auth Links */}
             {!loading && user ? (
               <>
                 <Link
                   href="/preferences"
-                  className={`text-sm font-medium p-2 rounded-md ${
-                    pathname === "/preferences"
-                      ? "bg-primary/10 text-primary"
-                      : "text-foreground/70 hover:text-foreground hover:bg-accent"
-                  }`}
+                  className={`text-sm font-medium p-2 rounded-md ${pathname === "/preferences"
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground/70 hover:text-foreground hover:bg-accent"
+                    }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   My Preferences

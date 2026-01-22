@@ -39,7 +39,7 @@ export function Search() {
     }
   }, [])
 
-  // Simulate fetching suggestions from an API
+  // Fetch suggestions from the API
   useEffect(() => {
     if (debouncedQuery.length < 2) {
       setSuggestions([])
@@ -48,27 +48,33 @@ export function Search() {
 
     setIsLoading(true)
 
-    // Simulate API call with setTimeout
-    const timer = setTimeout(() => {
-      // Mock data - in a real app, this would be an API call
-      const mockSuggestions = [
-        { id: "1", title: "PM Kisan Samman Nidhi Yojana", category: "Agriculture" },
-        { id: "2", title: "Pradhan Mantri Awas Yojana", category: "Housing" },
-        { id: "3", title: "Pradhan Mantri Jan Dhan Yojana", category: "Finance" },
-        { id: "4", title: "National Scholarship Portal", category: "Education" },
-        { id: "5", title: "Ayushman Bharat Yojana", category: "Health" },
-        { id: "6", title: "Sukanya Samriddhi Yojana", category: "Finance" },
-      ].filter(
-        (item) =>
-          item.title.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
-          item.category.toLowerCase().includes(debouncedQuery.toLowerCase()),
-      )
+    // Fetch schemes from API with search query
+    const fetchSuggestions = async () => {
+      try {
+        const response = await fetch(`/api/schemes?search=${encodeURIComponent(debouncedQuery)}&limit=6`)
+        if (!response.ok) {
+          throw new Error('Failed to fetch schemes')
+        }
 
-      setSuggestions(mockSuggestions)
-      setIsLoading(false)
-    }, 500)
+        const schemes = await response.json()
 
-    return () => clearTimeout(timer)
+        // Map schemes to suggestions format
+        const schemeSuggestions = schemes.map((scheme: any) => ({
+          id: scheme._id,
+          title: scheme.title,
+          category: scheme.category
+        }))
+
+        setSuggestions(schemeSuggestions)
+      } catch (error) {
+        console.error('Error fetching search suggestions:', error)
+        setSuggestions([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchSuggestions()
   }, [debouncedQuery])
 
   const handleSubmit = (e: React.FormEvent) => {

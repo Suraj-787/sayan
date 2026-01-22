@@ -1,0 +1,492 @@
+[
+    {
+        "title": "Beti Bachao Beti Padhao",
+        "description": "National initiative to address the declining Child Sex Ratio and promote education of girl children. The scheme focuses on preventing gender-biased sex selection, ensuring survival and protection of the girl child, and ensuring education and participation of girls.",
+        "category": "Women Empowerment",
+        "eligibility": "All girl children in India. Special focus on districts with low Child Sex Ratio (CSR). Parents and guardians of girl children can benefit from awareness programs and educational support.",
+        "benefits": "Awareness campaigns on importance of girl child, educational scholarships and incentives for girls, improved enrollment and retention of girls in schools, community mobilization against gender discrimination, financial incentives for families with girl children in select districts.",
+        "application_process": "1. Scheme operates at district and community level through local administration. 2. Educational benefits accessed through schools and educational institutions. 3. Awareness programs conducted by district authorities. 4. Financial incentives distributed through designated government channels. 5. Contact district Women and Child Development office for specific benefits.",
+        "documents": [
+            "Girl Child's Birth Certificate",
+            "Aadhaar Card",
+            "School Enrollment Certificate (for education benefits)",
+            "Parent/Guardian ID Proof",
+            "Income Certificate (if applicable)"
+        ],
+        "deadline": "Ongoing national campaign",
+        "website": "https://wcd.nic.in/bbbp-schemes",
+        "ministry": "Ministry of Women and Child Development",
+        "scheme_type": "Centrally Sponsored",
+        "gender": [
+            "Female"
+        ],
+        "min_age": 0,
+        "max_age": 18,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Both"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "Both",
+        "bpl": "Both",
+        "tags": [
+            "Girl Child",
+            "Women Empowerment",
+            "Education",
+            "Gender Equality",
+            "Child Welfare"
+        ]
+    },
+    {
+        "title": "Swachh Bharat Mission (Urban)",
+        "description": "Flagship urban sanitation program aiming to make urban India clean and open defecation free. The mission focuses on construction of household and community toilets, solid waste management, and behavioral change towards sanitation.",
+        "category": "Sanitation",
+        "eligibility": "Urban local bodies, households without toilets in urban areas, community organizations, and institutions. Individual households can apply for toilet construction subsidies. Priority given to slum dwellers and economically weaker sections.",
+        "benefits": "Financial assistance for individual household toilet construction (₹12,000 per unit), community and public toilet construction support, solid waste management infrastructure, IEC (Information, Education, Communication) activities, capacity building for urban local bodies.",
+        "application_process": "1. Apply through Urban Local Body (Municipal Corporation/Council). 2. Submit application for individual household toilet subsidy. 3. Provide proof of residence and ownership/rental agreement. 4. Get approval from local authority. 5. Construct toilet as per prescribed norms. 6. Submit completion certificate and photos. 7. Receive subsidy in bank account.",
+        "documents": [
+            "Aadhaar Card",
+            "Proof of Residence",
+            "Property Ownership Documents/Rental Agreement",
+            "Bank Account Details",
+            "Income Certificate (for subsidy)",
+            "Photographs of Construction Site"
+        ],
+        "deadline": "Ongoing - Extended beyond initial 2019 deadline",
+        "website": "https://swachhbharaturban.gov.in/",
+        "ministry": "Ministry of Housing and Urban Affairs",
+        "scheme_type": "Centrally Sponsored",
+        "gender": [
+            "All"
+        ],
+        "min_age": 18,
+        "max_age": 75,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Urban"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "No",
+        "bpl": "Both",
+        "tags": [
+            "Sanitation",
+            "Toilet",
+            "Urban Development",
+            "Swachh Bharat",
+            "Clean India",
+            "ODF"
+        ]
+    },
+    {
+        "title": "Jal Jeevan Mission (Urban)",
+        "description": "Mission to provide universal coverage of water supply to all households through functional taps in urban areas. Aims to ensure reliable and adequate quantity of water with prescribed quality standards.",
+        "category": "Infrastructure",
+        "eligibility": "All urban households in statutory towns. Urban local bodies and water utilities can apply for infrastructure development. Priority to households without piped water supply and areas with water quality issues.",
+        "benefits": "Functional household tap connections, assured water supply of prescribed quality, 24x7 water supply in cities, rejuvenation of water bodies, rainwater harvesting, wastewater treatment and reuse, improved water quality monitoring.",
+        "application_process": "1. Urban Local Body prepares City Water Balance Plan. 2. Households register for tap connections through local water utility. 3. Submit application with required documents. 4. Pay connection charges (subsidized for poor households). 5. Water utility installs connection. 6. Start receiving regular water supply.",
+        "documents": [
+            "Aadhaar Card",
+            "Proof of Residence",
+            "Property Tax Receipt",
+            "BPL Card (if applicable for subsidy)",
+            "Bank Account Details"
+        ],
+        "deadline": "Target completion by 2026",
+        "website": "https://jjm.gov.in/",
+        "ministry": "Ministry of Housing and Urban Affairs",
+        "scheme_type": "Centrally Sponsored",
+        "gender": [
+            "All"
+        ],
+        "min_age": 18,
+        "max_age": 75,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Urban"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "No",
+        "bpl": "Both",
+        "tags": [
+            "Water Supply",
+            "Urban Infrastructure",
+            "Tap Connection",
+            "Jal Jeevan Mission",
+            "Drinking Water"
+        ]
+    },
+    {
+        "title": "National Social Assistance Programme (NSAP)",
+        "description": "Social security program providing financial assistance to elderly, widows, and persons with disabilities belonging to Below Poverty Line (BPL) households. Includes multiple pension schemes for vulnerable sections.",
+        "category": "Welfare",
+        "eligibility": "BPL households with elderly persons (60+ years), widows (40+ years), and persons with severe/multiple disabilities (18+ years). Beneficiaries must not be receiving pension from any other government scheme.",
+        "benefits": "Indira Gandhi National Old Age Pension: ₹200-500/month for 60+ years. Indira Gandhi National Widow Pension: ₹300-500/month for widows 40+ years. Indira Gandhi National Disability Pension: ₹300-500/month for persons with severe disability. National Family Benefit Scheme: ₹20,000 lump sum on death of primary breadwinner. Annapurna Scheme: 10 kg foodgrains per month for eligible senior citizens.",
+        "application_process": "1. Obtain application form from Gram Panchayat/Municipal office. 2. Fill form with personal and family details. 3. Attach BPL card, age proof, and other required documents. 4. Submit to local Panchayat/Municipal authority. 5. Verification by local officials. 6. Approval by District Social Welfare Officer. 7. Pension credited to bank account monthly.",
+        "documents": [
+            "BPL Card",
+            "Age Proof (Birth Certificate/School Certificate/Aadhaar)",
+            "Widow Certificate (for widow pension)",
+            "Disability Certificate (for disability pension)",
+            "Death Certificate of Breadwinner (for family benefit)",
+            "Bank Account Details",
+            "Aadhaar Card",
+            "Passport Size Photographs"
+        ],
+        "deadline": "Ongoing scheme - Apply anytime",
+        "website": "https://nsap.nic.in/",
+        "ministry": "Ministry of Rural Development",
+        "scheme_type": "Centrally Sponsored",
+        "gender": [
+            "All"
+        ],
+        "min_age": 18,
+        "max_age": 100,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Both"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "80%+"
+        ],
+        "minority": "Both",
+        "student": "No",
+        "bpl": "Yes",
+        "tags": [
+            "Pension",
+            "Social Security",
+            "BPL",
+            "Elderly",
+            "Widow",
+            "Disability",
+            "NSAP"
+        ]
+    },
+    {
+        "title": "Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA)",
+        "description": "Largest employment guarantee scheme providing at least 100 days of guaranteed wage employment per year to rural households whose adult members volunteer to do unskilled manual work. Aims to enhance livelihood security and create durable assets.",
+        "category": "Employment",
+        "eligibility": "All rural households whose adult members (18+ years) are willing to do unskilled manual work. No specific educational or skill requirements. Priority to women, SC/ST, and vulnerable groups.",
+        "benefits": "Guaranteed 100 days of wage employment per household per year, wages as per state minimum wage rates (₹200-300+ per day), work within 5 km of residence, unemployment allowance if work not provided within 15 days, creation of durable assets (water conservation, rural connectivity, land development), women empowerment through 33% reservation.",
+        "application_process": "1. Apply to Gram Panchayat for job card. 2. Submit household details and photographs. 3. Receive job card within 15 days. 4. Submit written application for work (minimum 14 days in advance). 5. Work allocated within 15 days or unemployment allowance paid. 6. Attend work and get attendance marked. 7. Wages credited to bank/post office account within 15 days.",
+        "documents": [
+            "Aadhaar Card",
+            "Passport Size Photographs",
+            "Address Proof",
+            "Bank Account/Post Office Account Details"
+        ],
+        "deadline": "Ongoing scheme - Apply for job card anytime",
+        "website": "https://nrega.nic.in/",
+        "ministry": "Ministry of Rural Development",
+        "scheme_type": "Centrally Sponsored",
+        "gender": [
+            "All"
+        ],
+        "min_age": 18,
+        "max_age": 70,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Rural"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "No",
+        "bpl": "Both",
+        "tags": [
+            "Employment",
+            "Rural Development",
+            "MGNREGA",
+            "Wage Employment",
+            "100 Days Work",
+            "NREGA"
+        ]
+    },
+    {
+        "title": "Pradhan Mantri Jan Dhan Yojana (PMJDY)",
+        "description": "National Mission for Financial Inclusion providing universal access to banking facilities with at least one basic banking account for every household. Includes RuPay debit card, accident insurance, and overdraft facility.",
+        "category": "Finance",
+        "eligibility": "All Indian citizens aged 10 years and above. No minimum balance requirement. Individuals without any bank account can open PMJDY account. One account per person, but multiple accounts per household allowed.",
+        "benefits": "Zero balance basic savings bank account, RuPay debit card with in-built accident insurance of ₹2 lakh (₹1 lakh for accounts opened after Aug 2018), overdraft facility up to ₹10,000 (for eligible accounts after 6 months), access to insurance and pension products, mobile banking facility, direct benefit transfer of government subsidies.",
+        "application_process": "1. Visit nearest bank branch or Banking Correspondent. 2. Fill PMJDY account opening form. 3. Submit self-attested photograph and identity proof. 4. Provide Aadhaar number for e-KYC (or other KYC documents). 5. Account opened immediately. 6. Receive RuPay debit card within 30 days. 7. Activate mobile banking if required.",
+        "documents": [
+            "Aadhaar Card (preferred for e-KYC)",
+            "Alternative: Voter ID/Driving License/PAN Card/Passport",
+            "Passport Size Photograph",
+            "Address Proof (if different from ID proof)"
+        ],
+        "deadline": "Ongoing scheme - Open account anytime",
+        "website": "https://www.pmjdy.gov.in/",
+        "ministry": "Ministry of Finance (Department of Financial Services)",
+        "scheme_type": "Central",
+        "gender": [
+            "All"
+        ],
+        "min_age": 10,
+        "max_age": 100,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Both"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "Both",
+        "bpl": "Both",
+        "tags": [
+            "Banking",
+            "Financial Inclusion",
+            "Jan Dhan",
+            "Zero Balance Account",
+            "RuPay Card",
+            "DBT"
+        ]
+    },
+    {
+        "title": "Pradhan Mantri Matru Vandana Yojana (PMMVY)",
+        "description": "Maternity benefit program providing cash incentive to pregnant women and lactating mothers for first live birth. Aims to partially compensate for wage loss and ensure proper nutrition and rest during pregnancy and after childbirth.",
+        "category": "Health",
+        "eligibility": "All pregnant women and lactating mothers for first live birth. Applicable to women aged 19 years and above. Excludes women employed with Central/State Government or PSUs receiving similar benefits under any law.",
+        "benefits": "Cash incentive of ₹5,000 in three installments: ₹1,000 on early registration of pregnancy, ₹2,000 after 6 months of pregnancy on receiving at least one ante-natal check-up, ₹2,000 after child birth is registered and first cycle of vaccination completed. Additional ₹1,000 under Janani Suraksha Yojana for institutional delivery (total ₹6,000).",
+        "application_process": "1. Register pregnancy at Anganwadi Centre (AWC) or approved health facility. 2. Fill PMMVY application form (Form 1-A). 3. Submit with required documents to AWC/Health facility. 4. Receive first installment after verification. 5. Submit Form 1-B after 6 months with ANC checkup proof. 6. Submit Form 1-C after delivery with child's birth registration and vaccination proof. 7. Installments credited directly to bank account.",
+        "documents": [
+            "Aadhaar Card",
+            "Bank Account Details (with IFSC)",
+            "MCP Card (Mother and Child Protection Card)",
+            "Identity Proof",
+            "Institutional Delivery Proof",
+            "Child's Birth Certificate",
+            "Vaccination Records"
+        ],
+        "deadline": "Ongoing scheme - Register during pregnancy",
+        "website": "https://pmmvy.nic.in/",
+        "ministry": "Ministry of Women and Child Development",
+        "scheme_type": "Centrally Sponsored",
+        "gender": [
+            "Female"
+        ],
+        "min_age": 19,
+        "max_age": 45,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Both"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "Both",
+        "bpl": "Both",
+        "tags": [
+            "Maternity",
+            "Women Health",
+            "Pregnancy",
+            "Cash Benefit",
+            "Nutrition",
+            "Mother and Child"
+        ]
+    },
+    {
+        "title": "Pradhan Mantri Suraksha Bima Yojana (PMSBY)",
+        "description": "Accidental death and disability insurance scheme offering coverage of ₹2 lakh for accidental death or permanent total disability at a premium of just ₹12 per year. Available to all bank account holders.",
+        "category": "Finance",
+        "eligibility": "Indian citizens aged 18-70 years having savings bank account. Annual renewal required. Multiple accounts can be enrolled but benefit limited to one account. Consent required for auto-debit of premium.",
+        "benefits": "Accidental death coverage of ₹2 lakh, permanent total disability coverage of ₹2 lakh, permanent partial disability coverage of ₹1 lakh, very low premium of ₹12 per year (inclusive of all taxes), easy enrollment through bank, coverage renewable annually, claim settlement through bank/insurance company.",
+        "application_process": "1. Visit your bank branch or use net banking. 2. Fill PMSBY enrollment form. 3. Provide consent for auto-debit of ₹12 annual premium. 4. Submit Aadhaar number and nominee details. 5. Premium auto-debited from account annually (May-June). 6. Coverage active from June 1st to May 31st. 7. For claims, submit claim form with required documents to bank.",
+        "documents": [
+            "Savings Bank Account",
+            "Aadhaar Card",
+            "Consent for Auto-debit",
+            "Nominee Details",
+            "For Claims: Death Certificate/Disability Certificate, Post-mortem Report (if applicable), FIR (if applicable)"
+        ],
+        "deadline": "Enrollment: Anytime (coverage from next June 1st) or during May-June for immediate coverage",
+        "website": "https://www.jansuraksha.gov.in/",
+        "ministry": "Ministry of Finance (Department of Financial Services)",
+        "scheme_type": "Central",
+        "gender": [
+            "All"
+        ],
+        "min_age": 18,
+        "max_age": 70,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Both"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "Both",
+        "bpl": "Both",
+        "tags": [
+            "Insurance",
+            "Accident Insurance",
+            "Life Insurance",
+            "PMSBY",
+            "Jan Suraksha",
+            "Low Premium"
+        ]
+    },
+    {
+        "title": "Pradhan Mantri Jeevan Jyoti Bima Yojana (PMJJBY)",
+        "description": "Life insurance scheme providing coverage of ₹2 lakh in case of death due to any reason at a premium of ₹436 per year. Available to all bank account holders with renewable annual coverage.",
+        "category": "Finance",
+        "eligibility": "Indian citizens aged 18-50 years having savings bank account. Coverage continues till age 55 with annual renewal. Good health required at entry. Consent required for auto-debit of premium. One person can enroll through one bank account only.",
+        "benefits": "Life insurance coverage of ₹2 lakh on death due to any reason (natural or accidental), affordable premium of ₹436 per year (inclusive of all taxes), easy enrollment through bank, coverage renewable annually till age 55, claim settlement through bank/insurance company, nominee receives sum assured on death of insured.",
+        "application_process": "1. Visit your bank branch or use net banking. 2. Fill PMJJBY enrollment form. 3. Provide consent for auto-debit of ₹436 annual premium. 4. Submit Aadhaar number and nominee details. 5. Self-declare good health. 6. Premium auto-debited annually (May-June). 7. Coverage active from June 1st to May 31st. 8. For claims, nominee submits claim form with death certificate to bank.",
+        "documents": [
+            "Savings Bank Account",
+            "Aadhaar Card",
+            "Consent for Auto-debit",
+            "Nominee Details",
+            "Self-declaration of Good Health",
+            "For Claims: Death Certificate, Claimant ID Proof"
+        ],
+        "deadline": "Enrollment: Anytime (coverage from next June 1st) or during May-June for immediate coverage",
+        "website": "https://www.jansuraksha.gov.in/",
+        "ministry": "Ministry of Finance (Department of Financial Services)",
+        "scheme_type": "Central",
+        "gender": [
+            "All"
+        ],
+        "min_age": 18,
+        "max_age": 50,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Both"
+        ],
+        "social_category": [
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "Both",
+        "bpl": "Both",
+        "tags": [
+            "Life Insurance",
+            "PMJJBY",
+            "Jan Suraksha",
+            "Death Coverage",
+            "Term Insurance",
+            "Low Premium"
+        ]
+    },
+    {
+        "title": "Stand Up India Scheme",
+        "description": "Scheme to promote entrepreneurship among SC/ST and women entrepreneurs by facilitating bank loans between ₹10 lakh to ₹1 crore for greenfield enterprises in manufacturing, services, or trading sector.",
+        "category": "Entrepreneurship",
+        "eligibility": "SC/ST and/or women entrepreneurs aged 18 years and above. At least one SC/ST and one woman borrower per bank branch. For greenfield enterprises (first-time ventures) in manufacturing, services, or trading sector. Borrower should not be in default to any bank/financial institution.",
+        "benefits": "Bank loans from ₹10 lakh to ₹1 crore for greenfield enterprises, composite loan including term loan and working capital, repayment period up to 7 years with moratorium, margin money requirement: 15-25% of project cost, credit guarantee coverage through NCGTC, handholding support and training, convergence with government schemes for margin money.",
+        "application_process": "1. Prepare detailed project report. 2. Visit Stand Up India portal and apply online. 3. Select preferred bank branch. 4. Upload required documents. 5. Application forwarded to selected bank. 6. Bank evaluates project and conducts due diligence. 7. Loan sanctioned and disbursed. 8. Avail handholding support for business setup. 9. Start business operations.",
+        "documents": [
+            "Aadhaar Card",
+            "PAN Card",
+            "SC/ST Certificate (if applicable)",
+            "Project Report",
+            "Quotations for Machinery/Equipment",
+            "Business Registration Documents",
+            "Bank Statements",
+            "Address Proof",
+            "Educational Certificates"
+        ],
+        "deadline": "Extended till 2025",
+        "website": "https://www.standupmitra.in/",
+        "ministry": "Ministry of Finance (Department of Financial Services)",
+        "scheme_type": "Central",
+        "gender": [
+            "All"
+        ],
+        "min_age": 18,
+        "max_age": 65,
+        "state": [
+            "All India"
+        ],
+        "residence_area": [
+            "Both"
+        ],
+        "social_category": [
+            "SC",
+            "ST",
+            "All"
+        ],
+        "differently_abled": "Both",
+        "disability_percentage": [
+            "Any"
+        ],
+        "minority": "Both",
+        "student": "No",
+        "bpl": "Both",
+        "tags": [
+            "Entrepreneurship",
+            "SC/ST",
+            "Women Entrepreneurs",
+            "Business Loan",
+            "Greenfield Enterprise",
+            "Stand Up India"
+        ]
+    }
+]
