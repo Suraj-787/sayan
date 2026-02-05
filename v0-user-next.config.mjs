@@ -1,9 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config) => {
-    // Add any webpack customizations here if needed
-    return config;
-  },
+  // Add your custom configuration here if needed
 }
 
 export default nextConfig; 
